@@ -11,28 +11,28 @@ DigiVoter leverages the power of the Internet Computer to create a robust and tr
 
 ## ✨ Features
 
-* 🗳️ **Create & Manage Elections:** Easily set up new elections with titles, detailed descriptions, candidate/option lists, and defined start/end times.
-* 🔐 **Secure User Authentication:** Integrates with secure authentication mechanisms suitable for the IC environment (e.g., Internet Identity) to ensure only eligible users participate.
-* 👤 **Anonymous & Private Voting:** Designed to ensure voter privacy by separating voter identity from their cast vote, preventing coercion and ensuring confidentiality.
-* 📊 **Real-time & Transparent Results:** Observe election results update live *after* the voting period concludes, ensuring transparency while maintaining vote secrecy during the election. Tallies are verifiable on-chain.
-* 🧾 **Verifiable Vote Receipts:** (Optional/Implementation Dependent) Provides users with cryptographic proof that their vote was correctly cast and included in the final tally.
-* 🌐 **Fully On-Chain:** Runs entirely on the Internet Computer, benefiting from its speed, scalability, security, and tamper-proof nature. No reliance on centralized servers.
-* ✅ **End-to-End Verifiability:** From canister code deployment to vote casting and tallying, the process aims for maximum transparency and auditability.
+- 🗳️ **Create & Manage Elections:** Easily set up new elections with titles, detailed descriptions, candidate/option lists, and defined start/end times.
+- 🔐 **Secure User Authentication:** Integrates with secure authentication mechanisms suitable for the IC environment (e.g., Internet Identity) to ensure only eligible users participate.
+- 👤 **Anonymous & Private Voting:** Designed to ensure voter privacy by separating voter identity from their cast vote, preventing coercion and ensuring confidentiality.
+- 📊 **Real-time & Transparent Results:** Observe election results update live _after_ the voting period concludes, ensuring transparency while maintaining vote secrecy during the election. Tallies are verifiable on-chain.
+- 🧾 **Verifiable Vote Receipts:** (Optional/Implementation Dependent) Provides users with cryptographic proof that their vote was correctly cast and included in the final tally.
+- 🌐 **Fully On-Chain:** Runs entirely on the Internet Computer, benefiting from its speed, scalability, security, and tamper-proof nature. No reliance on centralized servers.
+- ✅ **End-to-End Verifiability:** From canister code deployment to vote casting and tallying, the process aims for maximum transparency and auditability.
 
 ## 🤔 Why DigiVoter on the Internet Computer?
 
-* **True Decentralization:** No single entity controls the application or the voting data, eliminating single points of failure and control.
-* **Enhanced Security:** Leverages the cryptographic security, consensus mechanisms, and Sybil resistance inherent to the Internet Computer.
-* **Transparency:** All canister code (backend logic) and election data (anonymized votes, results) can be publicly audited on the blockchain.
-* **Censorship Resistance:** Highly resistant to external interference or attempts to shut down or manipulate the voting process.
-* **Direct Web Serving:** Serves the frontend directly from the blockchain, reducing reliance on traditional web hosting infrastructure.
+- **True Decentralization:** No single entity controls the application or the voting data, eliminating single points of failure and control.
+- **Enhanced Security:** Leverages the cryptographic security, consensus mechanisms, and Sybil resistance inherent to the Internet Computer.
+- **Transparency:** All canister code (backend logic) and election data (anonymized votes, results) can be publicly audited on the blockchain.
+- **Censorship Resistance:** Highly resistant to external interference or attempts to shut down or manipulate the voting process.
+- **Direct Web Serving:** Serves the frontend directly from the blockchain, reducing reliance on traditional web hosting infrastructure.
 
 ## 🛠️ Technology Stack
 
-* **Frontend:** [React.js](https://reactjs.org/) - A popular JavaScript library for building dynamic and interactive user interfaces.
-* **Backend Canisters:** [Rust](https://www.rust-lang.org/) - A performant and memory-safe language used for writing secure smart contracts (canisters) on the Internet Computer.
-* **Blockchain Platform:** [Internet Computer Protocol (ICP)](https://internetcomputer.org/) - The underlying decentralized cloud platform providing compute, storage, and consensus.
-* **IC SDK:** `dfx` - The command-line interface and SDK for developing and deploying applications on the Internet Computer.
+- **Frontend:** [React.js](https://reactjs.org/) - A popular JavaScript library for building dynamic and interactive user interfaces.
+- **Backend Canisters:** [Rust](https://www.rust-lang.org/) - A performant and memory-safe language used for writing secure smart contracts (canisters) on the Internet Computer.
+- **Blockchain Platform:** [Internet Computer Protocol (ICP)](https://internetcomputer.org/) - The underlying decentralized cloud platform providing compute, storage, and consensus.
+- **IC SDK:** `dfx` - The command-line interface and SDK for developing and deploying applications on the Internet Computer.
 
 ## 🚀 Getting Started
 
@@ -43,54 +43,61 @@ Follow these instructions to get a local copy up and running for development and
 Ensure you have the following tools installed on your system:
 
 1.  **DFX (The IC SDK):** Required to build, deploy, and interact with Internet Computer applications.
-    * [Installation Guide](https://internetcomputer.org/docs/current/developer-docs/setup/install/)
-    * Quick Install (Linux/macOS):
-        ```bash
-        sh -ci "$(curl -fsSL [https://internetcomputer.org/install.sh](https://www.google.com/search?q=https://internetcomputer.org/install.sh))"
-        ```
-    * Verify installation: `dfx --version`
+
+    - [Installation Guide](https://internetcomputer.org/docs/current/developer-docs/setup/install/)
+    - Quick Install (Linux/macOS):
+      ```bash
+      sh -ci "$(curl -fsSL [https://internetcomputer.org/install.sh](https://www.google.com/search?q=https://internetcomputer.org/install.sh))"
+      ```
+    - Verify installation: `dfx --version`
 
 2.  **Node.js and npm:** Required for the React frontend development environment.
-    * [Download Node.js](https://nodejs.org/) (LTS version is generally recommended)
-    * Verify installation: `node -v` and `npm -v`
+    - [Download Node.js](https://nodejs.org/) (LTS version is generally recommended)
+    - Verify installation: `node -v` and `npm -v`
 
 ### Installation & Local Deployment
 
 1.  **Clone the repository:**
+
     ```bash
     git clone [https://github.com/akshat-shah-017/DigiVoter.git](https://www.google.com/search?q=https://github.com/akshat-shah-017/DigiVoter.git)
     cd DigiVoter
     ```
 
 2.  **Install frontend dependencies:**
+
     ```bash
     npm install
     ```
 
 3.  **Start the local Internet Computer replica:**
     It's recommended to run the local replica in a separate terminal window/tab as it provides ongoing status logs.
+
     ```bash
     # Navigate to your project directory (DigiVoter) in a new terminal
     dfx start --background --clean
     ```
-    * `--background` runs the replica process in the background.
-    * `--clean` starts with a fresh state, useful for avoiding potential conflicts from previous runs.
+
+    - `--background` runs the replica process in the background.
+    - `--clean` starts with a fresh state, useful for avoiding potential conflicts from previous runs.
 
 4.  **Deploy the canisters (backend logic):**
     In your original terminal window (within the `DigiVoter` directory):
+
     ```bash
     dfx deploy
     ```
-    * This command compiles the Rust canister code, deploys it to your local replica, and generates necessary interface files for the frontend.
+
+    - This command compiles the Rust canister code, deploys it to your local replica, and generates necessary interface files for the frontend.
 
 5.  **Run the frontend development server:**
     ```bash
     npm start
     ```
     This command will typically:
-    * Build the React application.
-    * Start a local development server (often on `http://localhost:3000` or a similar port).
-    * Open the application automatically in your default web browser. Check the terminal output for the exact URL.
+    - Build the React application.
+    - Start a local development server (often on `http://localhost:3000` or a similar port).
+    - Open the application automatically in your default web browser. Check the terminal output for the exact URL.
 
 ### Usage Guide
 
@@ -140,13 +147,14 @@ digivoter/
 # node_modules/             # Installed Node.js dependencies (frontend)
 # target/                   # Rust build output directory (backend)
 ```
+
 ## 🤝 Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**!
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
-1.  Fork the Project (`https://github.com/akshat-shah-017/DigiVoter/fork`)
+1.  Fork the Project (`https://github.com/Aditya-galaxy/DigiVoter/fork`)
 2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
@@ -157,12 +165,3 @@ Please ensure your code follows the project's coding style and includes tests wh
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` file for more information.
-
-## 📧 Contact
-
-Akshat Shah
-email: shah.akshat.g@gmail.com
-
-Project Link: [https://github.com/akshat-shah-017/DigiVoter](https://github.com/akshat-shah-017/DigiVoter)
-
----
