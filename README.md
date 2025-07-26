@@ -1,4 +1,93 @@
-# DeVite
+# DeVite : Decentralized AI Research Assistant
+
+## Overview
+
+DeVite is a decentralised AI Research assistant with blockchain-based research platform with NFT-based intellectual property ownership, decentralized AI processing and DAO governance with complete Data sovereignty.
+
+### ICP Canister Infrastructure
+
+- **Personal Research Canisters**: Individual blockchain containers for each researcher's data and projects
+- **On-Chain AI Processing**: Direct execution of research synthesis models within ICP infrastructure
+- **Decentralized Storage**: User-controlled data storage without external dependencies
+- **Smart Contract Automation**: Self-executing research workflows triggered by predefined conditions
+
+### Token-Based Governance
+
+- **DAO Structure**: Community governance for platform decisions and feature development
+- **Voting Mechanisms**: Token-based decision making for research standards and platform improvements
+- **Treasury Management**: Community-controlled funding allocation for development priorities
+
+## Essential MVP Features
+
+### NFT Ownership: Research Output Tokenization
+
+**Core Implementation**:
+
+- **Automatic Minting**: Research outputs (papers, datasets, code) automatically tokenized upon creation
+- **Immutable Authorship**: Cryptographic proof of original contribution with timestamps
+- **Basic Licensing**: Simple smart contracts for usage rights and attribution
+- **Ownership Transfer**: Standard NFT transfer mechanisms for research asset trading
+
+**Technical Requirements**:
+
+- NFT metadata including author, creation date, research domain, and content hash
+- Integration with ICP's NFT standards for interoperability
+- Basic marketplace functionality for research asset discovery
+
+### DAO Governance: Community Decision Making
+
+**Essential Governance Features**:
+
+- **Proposal System**: Community members can submit platform improvement proposals
+- **Voting Interface**: Simple voting mechanism for approved community members
+- **Basic Treasury**: Funding pool for essential platform maintenance and development
+- **Membership Management**: System for researcher verification and token distribution
+
+**Implementation Requirements**:
+
+- Governance token distribution based on research contributions
+- Proposal creation and voting smart contracts
+- Basic reputation system for voting weight calculation
+
+### Smart Contract Workflows: Automated Research Tasks
+
+**Core Automation Features**:
+
+- **Literature Monitoring**: Automated tracking of new publications in specified research domains
+- **Collaboration Triggers**: Automatic project setup when multiple researchers express interest
+- **Publication Pipeline**: Streamlined process from research completion to community validation
+- **Quality Gates**: Basic validation checkpoints for research methodology compliance
+
+**Technical Implementation**:
+
+- Event-driven workflow engine using ICP's messaging system
+- Integration with external academic APIs through HTTPS outcalls
+- State management for long-running research processes
+
+### Multi-Source Synthesis: Information Integration
+
+**Essential Synthesis Capabilities**:
+
+- **Academic Database Integration**: Direct connections to major research databases (PubMed, arXiv)
+- **Web Source Analysis**: AI-powered evaluation of online research material credibility
+- **Conflict Detection**: Identification of contradictory information across sources
+- **Summary Generation**: Automated creation of research literature summaries
+
+**Implementation Requirements**:
+
+- Web scraping modules for academic content extraction
+- Natural language processing for content analysis and synthesis
+- Source credibility scoring algorithm
+- Basic bias detection in research materials
+
+### User-Controlled Storage: Personal Data Sovereignty
+
+**Core Storage Features**:
+
+- **Encrypted Canisters**: End-to-end encrypted storage for sensitive research data
+- **Access Control**: Granular permissions for research collaboration and sharing
+- **Version Control**: Basic versioning system for research document evolution
+- **Backup Systems**: Distributed replication across ICP nodes
 
 ## 🛠️ Technology Stack
 
