@@ -1,31 +1,4 @@
-# DigiVoter: Secure Decentralized Voting on the Internet Computer 🗳️
-
-**A secure, transparent, and user-friendly decentralized voting application built entirely on the Internet Computer Protocol (ICP).**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-DigiVoter leverages the power of the Internet Computer to create a robust and trustworthy platform for conducting online elections. It aims to address the challenges of traditional online voting systems (like security vulnerabilities, lack of transparency, and potential for censorship) by providing enhanced security, verifiable transparency, and user anonymity through blockchain technology.
-
----
-
----
-
-## ✨ Features
-
-- 🗳️ **Create & Manage Elections:** Easily set up new elections with titles, detailed descriptions, candidate/option lists, and defined start/end times.
-- 🔐 **Secure User Authentication:** Integrates with secure authentication mechanisms suitable for the IC environment (e.g., Internet Identity) to ensure only eligible users participate.
-- 👤 **Anonymous & Private Voting:** Designed to ensure voter privacy by separating voter identity from their cast vote, preventing coercion and ensuring confidentiality.
-- 📊 **Real-time & Transparent Results:** Observe election results update live _after_ the voting period concludes, ensuring transparency while maintaining vote secrecy during the election. Tallies are verifiable on-chain.
-- 🧾 **Verifiable Vote Receipts:** (Optional/Implementation Dependent) Provides users with cryptographic proof that their vote was correctly cast and included in the final tally.
-- 🌐 **Fully On-Chain:** Runs entirely on the Internet Computer, benefiting from its speed, scalability, security, and tamper-proof nature. No reliance on centralized servers.
-- ✅ **End-to-End Verifiability:** From canister code deployment to vote casting and tallying, the process aims for maximum transparency and auditability.
-
-## 🤔 Why DigiVoter on the Internet Computer?
-
-- **True Decentralization:** No single entity controls the application or the voting data, eliminating single points of failure and control.
-- **Enhanced Security:** Leverages the cryptographic security, consensus mechanisms, and Sybil resistance inherent to the Internet Computer.
-- **Transparency:** All canister code (backend logic) and election data (anonymized votes, results) can be publicly audited on the blockchain.
-- **Censorship Resistance:** Highly resistant to external interference or attempts to shut down or manipulate the voting process.
-- **Direct Web Serving:** Serves the frontend directly from the blockchain, reducing reliance on traditional web hosting infrastructure.
+# DeVite
 
 ## 🛠️ Technology Stack
 
@@ -60,8 +33,8 @@ Ensure you have the following tools installed on your system:
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/akshat-shah-017/DigiVoter.git](https://www.google.com/search?q=https://github.com/akshat-shah-017/DigiVoter.git)
-    cd DigiVoter
+    git clone [https://github.com/Aditya-galaxy/DeVite.git](https://www.google.com/search?q=https://github.com/Aditya-galaxy/DeVite.git)
+    cd DeVite
     ```
 
 2.  **Install frontend dependencies:**
@@ -74,7 +47,7 @@ Ensure you have the following tools installed on your system:
     It's recommended to run the local replica in a separate terminal window/tab as it provides ongoing status logs.
 
     ```bash
-    # Navigate to your project directory (DigiVoter) in a new terminal
+    # Navigate to your project directory (DeVite) in a new terminal
     dfx start --background --clean
     ```
 
@@ -82,7 +55,7 @@ Ensure you have the following tools installed on your system:
     - `--clean` starts with a fresh state, useful for avoiding potential conflicts from previous runs.
 
 4.  **Deploy the canisters (backend logic):**
-    In your original terminal window (within the `DigiVoter` directory):
+    In your original terminal window (within the `DeVite` directory):
 
     ```bash
     dfx deploy
@@ -111,21 +84,21 @@ Once the application is running in your browser:
 ## 🗺️ Project Structure
 
 ```text
-digivoter/
+DeVite/
 ├── .gitignore              # Specifies intentionally untracked files for Git
 ├── dfx.json                # DFINITY SDK project configuration (defines canisters)
 ├── LICENSE                 # Project license information
 ├── README.md               # Project overview and instructions (this file)
 ├── src/
 │   ├── declarations/         # Auto-generated canister interfaces (used by frontend)
-│   │   └── digivoter_backend/ # TS/JS types and client for backend canister
+│   │   └── devite_backend/ # TS/JS types and client for backend canister
 │   │   └── ...               # (Interfaces for other canisters if any)
-│   ├── digivoter_backend/    # Rust backend canister source code
+│   ├── devite_backend/    # Rust backend canister source code
 │   │   ├── src/
 │   │   │   └── lib.rs        # Main Rust canister logic
 │   │   ├── Cargo.toml        # Rust package definition and dependencies
-│   │   └── digivoter_backend.did # Candid interface definition (source)
-│   └── digivoter_frontend/   # React frontend source code
+│   │   └── DeVite_backend.did # Candid interface definition (source)
+│   └── devite_frontend/   # React frontend source code
 │       ├── public/           # Static assets (e.g., favicon.ico, index.html template)
 │       │   └── index.html    # Main HTML file template
 │       ├── src/              # Core React application code
@@ -154,7 +127,7 @@ Contributions are what make the open-source community such an amazing place to l
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
-1.  Fork the Project (`https://github.com/Aditya-galaxy/DigiVoter/fork`)
+1.  Fork the Project (`https://github.com/Aditya-galaxy/DeVite/fork`)
 2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
