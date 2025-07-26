@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { digivoter_backend } from "../../../declarations/digivoter_backend";
+import { devite_backend } from "../../../declarations/devite_backend";
 
 function ProtectedRoute({ children, isAdmin = false }) {
   const { isAuthenticated, principal } = useAuth();
@@ -16,7 +16,7 @@ function ProtectedRoute({ children, isAdmin = false }) {
       }
 
       try {
-        const isAdminResult = await digivoter_backend.is_admin(principal);
+        const isAdminResult = await devite_backend.is_admin(principal);
         setHasAdminAccess(isAdminResult);
       } catch (error) {
         console.error("Error checking admin status:", error);

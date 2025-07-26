@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
-import { digivoter_backend } from "../../../declarations/digivoter_backend";
+import { devite_backend } from "../../../declarations/devite_backend";
 
 const AuthContext = createContext();
 
@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
     async function checkAdminStatus() {
       if (isAuthenticated && principal) {
         try {
-          const result = await digivoter_backend.is_admin(principal);
+          const result = await devite_backend.is_admin(principal);
           setIsAdmin(result);
         } catch (error) {
           console.error("Error checking admin status:", error);
