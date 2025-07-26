@@ -1,21 +1,16 @@
 {
   "canisters": {
-    "digivoter_backend": {
-      "candid": "src/digivoter_backend/digivoter_backend.did",
-      "package": "digivoter_backend",
+    "devite_backend": {
+      "candid": "src/devite_backend/devite_backend.did",
+      "package": "devite_backend",
       "type": "rust"
     },
-    "digivoter_frontend": {
-      "dependencies": [
-        "digivoter_backend"
-      ],
+    "devite_frontend": {
+      "dependencies": ["devite_backend"],
       "frontend": {
-        "entrypoint": "src/digivoter_frontend/src/index.html"
+        "entrypoint": "src/devite_frontend/src/index.html"
       },
-      "source": [
-        "src/digivoter_frontend/assets",
-        "dist/digivoter_frontend/"
-      ],
+      "source": ["src/devite_frontend/assets", "dist/devite_frontend/"],
       "type": "assets"
     }
   },

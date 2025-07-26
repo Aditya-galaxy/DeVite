@@ -1,5 +1,6 @@
 [workspace]
 members = [
-    "src/digivoter_backend"
+    "src/devite_backend"
 ]
 resolver = "2"
+

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { digivoter_backend } from "../../../declarations/digivoter_backend";
+import { devite_backend } from "../../../declarations/devite_backend";
 
 function Navbar() {
   const { isAuthenticated, principal, login, logout } = useAuth();
@@ -12,7 +12,7 @@ function Navbar() {
       if (!isAuthenticated || !principal) return;
 
       try {
-        const result = await digivoter_backend.is_admin(principal);
+        const result = await devite_backend.is_admin(principal);
         setIsAdmin(result);
       } catch (error) {
         console.error("Error checking admin status:", error);
@@ -25,7 +25,7 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">DigiVoter</Link>
+        <Link to="/">DeVite</Link>
       </div>
       <div className="navbar-menu">
         <Link to="/" className="navbar-item">Home</Link>
