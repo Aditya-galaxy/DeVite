@@ -72,15 +72,6 @@ Ensure you have the following tools installed on your system:
     - Start a local development server (often on `http://localhost:3000` or a similar port).
     - Open the application automatically in your default web browser. Check the terminal output for the exact URL.
 
-### Usage Guide
-
-Once the application is running in your browser:
-
-1.  **Authentication:** Connect using the required method (e.g., a development identity provided by the local replica, or integrate with Internet Identity for mainnet/testing).
-2.  **Create Election (Admin Role):** Navigate to the election creation section. Fill in the necessary details like title, description, voting options/candidates, and the start/end date and time for the voting period.
-3.  **Cast Vote (Voter Role):** Browse available active elections. Select your preferred option and submit your vote securely.
-4.  **View Results:** After an election's end time has passed, navigate to the results page to view the final, transparent tally.
-
 ## 🗺️ Project Structure
 
 ```text
