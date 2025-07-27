@@ -168,7 +168,7 @@ DeVite is a decentralised AI Research assistant with blockchain-based research p
 
 ## Complete Technical Architecture Diagram
 
-````
+```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                        ICP TECHNICAL ARCHITECTURE                              │
 └─────────────────────────────────────────────────────────────────────────────────┘
@@ -379,6 +379,8 @@ DeVite is a decentralised AI Research assistant with blockchain-based research p
 │  │  Cycle Balance   │  Response Times     │  User Activity       │  Alerts │   │
 │  │  Performance     │  Resource Usage     │  Success Rates       │  Health │   │
 │  └─────────────────────────────────────────────────────────────────-------------
+```
+
 ## Essential MVP Features
 
 ### NFT Ownership: Research Output Tokenization
@@ -561,7 +563,7 @@ DeVite/
 # dist/                     # Compiled frontend build output
 # node_modules/             # Installed Node.js dependencies (frontend)
 # target/                   # Rust build output directory (backend)
-````
+```
 
 ## 🤝 Contributing
 
