@@ -90,7 +90,7 @@ const ResearchPlatform: React.FC = () => {
                     </p>
                 </div>
                 <Button className="gradient-primary">
-                    Start New Research
+                    New Project
                 </Button>
             </div>
 
