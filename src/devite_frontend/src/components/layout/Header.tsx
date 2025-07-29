@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { Badge } from '../ui/badge';
-import { Menu, Wallet, Bell, User } from 'lucide-react';
+import { Menu, Bell, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface HeaderProps {
-  onConnect: () => void;
+  onConnect: () => void;      // Should handle both login and logout
   isConnected: boolean;
   address?: string;
 }
@@ -42,8 +42,7 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
             <Link
               key={item.name}
               to={item.href}
-              className={`text-sm font-medium transition-smooth hover:text-primary ${isActive(item.href) ? 'text-primary' : 'text-muted-foreground'
-                }`}
+              className={`text-sm font-medium transition-smooth hover:text-primary ${isActive(item.href) ? 'text-primary' : 'text-muted-foreground'}`}
             >
               {item.name}
             </Link>
@@ -63,16 +62,17 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm">
                 <User className="h-4 w-4 mr-2" />
-                Profile
+                {address ? address.slice(0, 8) + '...' : 'Profile'}
               </Button>
               <Button variant="ghost" size="icon" onClick={onConnect}>
                 <User className="h-4 w-4" />
+                {/* This acts as "Sign Out" */}
               </Button>
             </div>
           ) : (
             <Button onClick={onConnect} variant="hero" size="sm">
               <User className="h-4 w-4 mr-2" />
-              Sign Up / Login
+              Sign in
             </Button>
           )}
         </div>
@@ -98,8 +98,7 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`p-3 rounded-lg transition-smooth hover:bg-accent ${isActive(item.href) ? 'bg-accent text-primary' : 'text-muted-foreground'
-                      }`}
+                    className={`p-3 rounded-lg transition-smooth hover:bg-accent ${isActive(item.href) ? 'bg-accent text-primary' : 'text-muted-foreground'}`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}
@@ -112,7 +111,7 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
                   <div className="space-y-2">
                     <Button variant="outline" className="w-full justify-start">
                       <User className="h-4 w-4 mr-2" />
-                      Profile
+                      {address ? address.slice(0, 8) + '...' : 'Profile'}
                     </Button>
                     <Button variant="ghost" className="w-full justify-start" onClick={onConnect}>
                       <User className="h-4 w-4 mr-2" />
@@ -122,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
                 ) : (
                   <Button onClick={onConnect} variant="hero" className="w-full">
                     <User className="h-4 w-4 mr-2" />
-                    Sign Up / Login
+                    Sign in
                   </Button>
                 )}
               </div>

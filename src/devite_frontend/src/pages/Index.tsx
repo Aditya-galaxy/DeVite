@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { AuthClient } from '@dfinity/auth-client';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import StatCard from '../components/ui/StatCard';
-import { useFlowAuth } from '../hooks/useFlowAuth';
 import {
   ArrowRight,
   Brain,
@@ -22,7 +22,30 @@ import {
 } from 'lucide-react';
 
 const Index = () => {
-  const { user, logIn, logOut, isLoading, isConnected } = useFlowAuth();
+  // Internet Identity Auth State
+  const [user, setUser] = useState<any>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Login with Internet Identity
+  const logIn = async () => {
+    setIsLoading(true);
+    const authClient = await AuthClient.create();
+    await authClient.login({
+      identityProvider: "https://identity.ic0.app",
+      onSuccess: async () => {
+        setUser(authClient.getIdentity());
+        setIsConnected(true);
+        setIsLoading(false);
+      },
+      onError: () => setIsLoading(false),
+    });
+  };
+
+  const logOut = () => {
+    setUser(null);
+    setIsConnected(false);
+  };
 
   // Mock data for the research copilot
   const researchStats = {
@@ -55,12 +78,22 @@ const Index = () => {
     }
   ];
 
+  // Updated Get Started handler
+  const handleGetStarted = async () => {
+    if (!isConnected) {
+      await logIn();
+    }
+    if (isConnected || user) {
+      window.location.href = '/dashboard';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header
         onConnect={logIn}
         isConnected={isConnected}
-        address={user?.addr}
+        address={user ? user.getPrincipal().toText() : undefined}
       />
 
       {/* Hero Section */}
@@ -90,9 +123,9 @@ const Index = () => {
                 <Button
                   variant="hero"
                   size="xl"
-                  className="animate-float shadow-glow"
-                  onClick={() => window.location.href = isConnected ? '/dashboard' : '#'}
-                  disabled={!isConnected}
+                  className="bg-primary-solid animate-float shadow-glow"
+                  onClick={handleGetStarted}
+                  disabled={isLoading}
                 >
                   Get Started
                   <ArrowRight className="h-5 w-5 ml-2" />
@@ -100,18 +133,13 @@ const Index = () => {
                 <Button
                   variant="outline"
                   size="xl"
-                  className="border-2 hover:shadow-card"
+                  className="border-2 hover:shadow-card shadow-glow"
                   onClick={() => window.location.href = isConnected ? '/dashboard' : '#'}
                   disabled={!isConnected}
                 >
                   Deploy Agent
                 </Button>
               </div>
-              {!isConnected && (
-                <p className="text-sm text-muted-foreground">
-                  Please sign in to access the research platform
-                </p>
-              )}
 
               <div className="flex items-center space-x-8 pt-4">
                 <div className="text-center">
@@ -140,7 +168,7 @@ const Index = () => {
                 <CardContent className="space-y-4">
                   <div className="bg-secondary/5 p-4 rounded-lg border">
                     <code className="text-sm text-primary">
-                      {">"} Analyzing research dataset...
+                      {">"} Analyzing dataset...
                     </code>
                   </div>
                   <div className="bg-muted p-3 rounded text-sm">
@@ -284,7 +312,7 @@ const Index = () => {
               <Button
                 variant="outline"
                 size="xl"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground bg-primary-bold text-primary-foreground hover:bg-primary-foreground hover:text-primary"
                 onClick={() => window.location.href = isConnected ? '/dashboard' : '#'}
                 disabled={!isConnected}
               >

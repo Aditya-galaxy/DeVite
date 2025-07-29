@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { AuthClient } from '@dfinity/auth-client';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -6,7 +7,6 @@ import { Badge } from '../components/ui/badge';
 import StatCard from '../components/ui/StatCard';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import { useFlowAuth } from '../hooks/useFlowAuth';
 import {
   DollarSign,
   Shield,
@@ -25,7 +25,31 @@ import {
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { user, logIn, logOut, isLoading, isConnected } = useFlowAuth();
+  // Internet Identity Auth State
+  const [user, setUser] = useState<any>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Login with Internet Identity
+  const logIn = async () => {
+    setIsLoading(true);
+    const authClient = await AuthClient.create();
+    await authClient.login({
+      identityProvider: "https://identity.ic0.app",
+      onSuccess: async () => {
+        setUser(authClient.getIdentity());
+        setIsConnected(true);
+        setIsLoading(false);
+      },
+      onError: () => setIsLoading(false),
+    });
+  };
+
+  const logOut = () => {
+    setUser(null);
+    setIsConnected(false);
+  };
+
   // Research Copilot Mock Data
   const researcherStats = {
     totalProjects: '15',
@@ -57,7 +81,7 @@ const Dashboard: React.FC = () => {
         <Header
           onConnect={logIn}
           isConnected={isConnected}
-          address={user?.addr}
+          address={user ? user.getPrincipal().toText() : undefined}
         />
         <div className="container py-20">
           <div className="text-center space-y-6">
@@ -65,8 +89,8 @@ const Dashboard: React.FC = () => {
             <p className="text-xl text-muted-foreground">
               Please sign in to access the research dashboard
             </p>
-            <Button onClick={logIn} variant="hero" size="lg">
-              Sign Up / Login
+            <Button onClick={logIn} variant="hero" size="lg" disabled={isLoading}>
+              Sign in with Internet Identity
             </Button>
           </div>
         </div>
@@ -80,7 +104,7 @@ const Dashboard: React.FC = () => {
       <Header
         onConnect={logOut}
         isConnected={isConnected}
-        address={user?.addr}
+        address={user ? user.getPrincipal().toText() : undefined}
       />
       <div className="container py-8 space-y-8">
         <div className="flex items-center justify-between">
