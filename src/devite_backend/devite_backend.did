@@ -1,52 +1,141 @@
-type Election = record {
-    id: text;
-    title: text;
-    description: text;
-    options: vec text;
-    start_time: nat64;
-    end_time: nat64;
-    status: text;
+type CreateUserRequest = record {
+  username : text;
+  email : text;
+  institution : text;
+  research_domains : vec text;
 };
 
-type Vote = record {
-    election_id: text;
-    option_index: nat32;
-    voter_id: text;
-    timestamp: nat64;
-    verification_hash: text;
+type UserProfile = record {
+  principal : principal;
+  username : text;
+  email : text;
+  institution : text;
+  research_domains : vec text;
+  personal_canister_id : opt principal;
+  created_at : nat64;
 };
 
-type ElectionResult = record {
-    election_id: text;
-    title: text;
-    options: vec text;
-    vote_counts: vec nat64;
-    total_votes: nat64;
+type ResearchType = variant {
+  Paper;
+  Dataset;
+  Code;
+  Experiment;
+  Review;
 };
 
-type VoteReceipt = record {
-    verification_hash: text;
-    timestamp: nat64;
+type License = record {
+  license_type : text;
+  commercial_use : bool;
+  attribution_required : bool;
 };
+
+type ResearchMetadata = record {
+  keywords : vec text;
+  research_domain : text;
+  institution : text;
+  doi : opt text;
+  peer_reviewed : bool;
+};
+
+type MintRequest = record {
+  title : text;
+  description : text;
+  authors : vec text;
+  research_type : ResearchType;
+  content_hash : text;
+  license : License;
+  metadata : ResearchMetadata;
+};
+
+type ResearchNFT = record {
+  token_id : nat64;
+  owner : principal;
+  title : text;
+  description : text;
+  authors : vec text;
+  research_type : ResearchType;
+  content_hash : text;
+  license : License;
+  created_at : nat64;
+  metadata : ResearchMetadata;
+};
+
+type ProposalType = variant {
+  PlatformUpgrade;
+  ResearchStandard;
+  TreasuryAllocation;
+  GovernanceChange;
+};
+
+type ProposalStatus = variant {
+  Active;
+  Passed;
+  Rejected;
+  Executed;
+};
+
+type CreateProposalRequest = record {
+  title : text;
+  description : text;
+  proposal_type : ProposalType;
+  voting_duration_days : nat64;
+};
+
+type Proposal = record {
+  id : nat64;
+  proposer : principal;
+  title : text;
+  description : text;
+  proposal_type : ProposalType;
+  status : ProposalStatus;
+  votes_for : nat64;
+  votes_against : nat64;
+  voters : vec principal;
+  created_at : nat64;
+  voting_ends_at : nat64;
+};
+
+type Vote = variant {
+  For;
+  Against;
+};
+
+type PlatformStats = record {
+  total_users : nat64;
+  total_research_tokens : nat64;
+  active_proposals : nat64;
+  total_governance_tokens : nat64;
+};
+
+type Result = variant { Ok; Err : text };
+type Result_1 = variant { Ok : UserProfile; Err : text };
+type Result_2 = variant { Ok : nat64; Err : text };
 
 service : {
-    // Election Management
-    create_election: (text, text, vec text, nat64, nat64) -> (text);
-    get_elections: () -> (vec Election) query;
-    get_election: (text) -> (opt Election) query;
-    
-    // Voting
-    cast_vote: (text, nat32) -> (VoteReceipt);
-    verify_vote: (text) -> (bool) query;
-    
-    // Results
-    get_election_results: (text) -> (opt ElectionResult) query;
-    
-    // Admin Functions
-    start_election: (text) -> (bool);
-    end_election: (text) -> (variant { Ok: null; Err: text });
-    activate_election: (text) -> (variant { Ok: null; Err: text });
-    delete_election: (text) -> (variant { Ok: null; Err: text });
-    add_admin: (principal) -> (variant { Ok: null; Err: text });
-    is_admin: (principal) -> (bool) query;
+  // User Management Functions
+  register_user : (CreateUserRequest) -> (Result_1);
+  get_user_profile : (principal) -> (opt UserProfile) query;
+  get_my_profile : () -> (opt UserProfile) query;
+  list_all_users : () -> (vec UserProfile) query;
+  
+  // Research NFT Functions
+  mint_research_nft : (MintRequest) -> (Result_2);
+  get_research_token : (nat64) -> (opt ResearchNFT) query;
+  get_tokens_by_owner : (principal) -> (vec nat64) query;
+  get_tokens_by_research_type : (ResearchType) -> (vec ResearchNFT) query;
+  search_research_by_keyword : (text) -> (vec ResearchNFT) query;
+  transfer_research_token : (nat64, principal) -> (Result);
+  total_research_tokens : () -> (nat64) query;
+  
+  // Governance Functions
+  create_proposal : (CreateProposalRequest) -> (Result_2);
+  vote_on_proposal : (nat64, Vote) -> (Result);
+  finalize_proposal : (nat64) -> (Result);
+  get_proposal : (nat64) -> (opt Proposal) query;
+  get_governance_token_balance : (principal) -> (nat64) query;
+  get_active_proposals : () -> (vec Proposal) query;
+  get_all_proposals : () -> (vec Proposal) query;
+  
+  // Platform Statistics
+  get_platform_stats : () -> (PlatformStats) query;
 }
