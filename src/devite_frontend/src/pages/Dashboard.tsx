@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Alert, AlertDescription } from '../components/ui/alert';
+import { Badge } from '../components/ui/badge';
 import StatCard from '../components/ui/StatCard';
-import WeatherWidget from '../components/ui/WeatherWidget';
 import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import { useFlowAuth } from '../hooks/useFlowAuth';
-import { useInsurancePool } from '../hooks/useInsurancePool';
-import { useOracle } from '../hooks/useOracle';
-import { useWeatherXM } from '../hooks/useWeatherXM';
 import {
   DollarSign,
   Shield,
@@ -17,204 +14,63 @@ import {
   AlertTriangle,
   Plus,
   Eye,
-  Loader2
+  Brain,
+  Bot,
+  FileText,
+  Cpu,
+  Play,
+  Settings,
+  Upload,
+  Download
 } from 'lucide-react';
 
-// Error boundary for Dashboard component
-class DashboardErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error: Error | null }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Dashboard Error:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="container py-8">
-          <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
-              Dashboard encountered an error: {this.state.error?.message || 'Unknown error'}
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2"
-                onClick={() => this.setState({ hasError: false, error: null })}
-              >
-                Try Again
-              </Button>
-            </AlertDescription>
-          </Alert>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
 const Dashboard: React.FC = () => {
-  return (
-    <DashboardErrorBoundary>
-      <DashboardContent />
-    </DashboardErrorBoundary>
-  );
-};
-
-const DashboardContent: React.FC = () => {
-  const { user, logIn, logOut, isLoading: authLoading, isConnected } = useFlowAuth();
-  const { getPoolStats } = useInsurancePool();
-  const { getOracleStats } = useOracle();
-  const { weatherData, alerts, isLoading: weatherLoading, fetchWeatherData } = useWeatherXM();
-
-  const [poolStats, setPoolStats] = useState<any>(null);
-  const [oracleStats, setOracleStats] = useState<any>(null);
-  const [userPolicies, setUserPolicies] = useState<any[]>([]);
-  const [dashboardWeather, setDashboardWeather] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Default location for weather data - Kenya
-  const defaultLocation = { latitude: -1.2921, longitude: 36.8219 }; // Nairobi, Kenya
-
-  useEffect(() => {
-    const loadDashboardData = async () => {
-      if (!user) return;
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        // Load pool statistics
-        const poolData = await getPoolStats();
-        if (poolData) {
-          setPoolStats(poolData);
-        }
-
-        // Load oracle statistics
-        const oracleData = await getOracleStats();
-        if (oracleData) {
-          setOracleStats(oracleData);
-        }
-
-        // Load user policies - mock data for now
-        const policies = [
-          { id: 1, status: 'active', coverageAmount: 10000, premiumAmount: 500 },
-          { id: 2, status: 'pending', coverageAmount: 15000, premiumAmount: 750 }
-        ];
-        setUserPolicies(policies);
-
-        // Load weather data - use existing weather data
-        if (weatherData.length > 0) {
-          setDashboardWeather(weatherData[0]);
-        } else {
-          // Mock weather data for Kenya
-          setDashboardWeather({
-            location: 'Nairobi, Kenya',
-            temperature: 24,
-            humidity: 72,
-            rainfall: 18,
-            condition: 'cloudy',
-            windSpeed: 15,
-            alerts: alerts || []
-          });
-        }
-      } catch (err) {
-        console.error('Error loading dashboard data:', err);
-        setError('Failed to load dashboard data. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadDashboardData();
-  }, [user, getPoolStats, getOracleStats, weatherData.length, alerts.length]); // Use length instead of full arrays
-
-  // Calculate farmer stats from real data with safe defaults
-  const farmerStats = {
-    totalCoverage: userPolicies.reduce((sum, policy) => sum + (policy?.coverageAmount || 0), 0),
-    activePolicies: userPolicies.filter(p => p?.status === 'active').length,
-    claimsPending: userPolicies.filter(p => p?.status === 'pending_claim').length,
-    premiumsPaid: userPolicies.reduce((sum, policy) => sum + (policy?.premiumAmount || 0), 0)
+  const { user, logIn, logOut, isLoading, isConnected } = useFlowAuth();
+  // Research Copilot Mock Data
+  const researcherStats = {
+    totalProjects: '15',
+    activeQueries: '8',
+    processingJobs: '3',
+    completedAnalyses: '127'
   };
 
-  // Calculate LP stats from pool data with safe defaults
-  const lpStats = {
-    totalDeposited: poolStats?.totalPoolValue || 0,
-    currentYield: poolStats && poolStats.totalPoolValue > 0 ?
-      ((poolStats.totalPremiumsCollected - poolStats.totalPayoutsExecuted) / poolStats.totalPoolValue * 100) : 0,
-    poolUtilization: poolStats?.poolUtilization || 0,
-    earnings: poolStats ?
-      (poolStats.totalPremiumsCollected - poolStats.totalPayoutsExecuted) : 0
+  const computeStats = {
+    totalNodes: '342',
+    utilization: '78%',
+    avgResponseTime: '2.3s',
+    activeModels: '12'
   };
 
-  // Format currency values with null checking
-  const formatCurrency = (value: number | null | undefined) => {
-    const safeValue = value || 0;
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(safeValue);
+  const systemData = {
+    status: 'Operational',
+    uptime: '99.8%',
+    activeConnections: 1247,
+    dataProcessed: '45.2TB',
+    modelsDeployed: 8,
+    alerts: ['High compute usage', 'Model update available']
   };
 
-  const formatPercentage = (value: number | null | undefined) => {
-    const safeValue = value || 0;
-    return `${safeValue.toFixed(1)}%`;
-  };
-
-  if (authLoading) {
+  // Check if user is authenticated
+  if (!isConnected) {
     return (
-      <div className="container py-8 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading...</span>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="container py-8">
-        <Alert>
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Please connect your Flow wallet to access the dashboard.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="container py-8 space-y-8">
-        <div className="flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="ml-2">Loading dashboard data...</span>
+      <div className="min-h-screen bg-background">
+        <Header
+          onConnect={logIn}
+          isConnected={isConnected}
+          address={user?.addr}
+        />
+        <div className="container py-20">
+          <div className="text-center space-y-6">
+            <h1 className="text-4xl font-bold">Access Restricted</h1>
+            <p className="text-xl text-muted-foreground">
+              Please sign in to access the research dashboard
+            </p>
+            <Button onClick={logIn} variant="hero" size="lg">
+              Sign Up / Login
+            </Button>
+          </div>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container py-8">
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <Footer />
       </div>
     );
   }
@@ -222,127 +78,139 @@ const DashboardContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header
-        onConnect={logIn}
+        onConnect={logOut}
         isConnected={isConnected}
         address={user?.addr}
       />
       <div className="container py-8 space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <h1 className="text-3xl font-bold">Research Copilot Dashboard</h1>
             <p className="text-muted-foreground">
-              Monitor your policies, pools, and weather conditions
+              Monitor your research projects, compute resources, and AI model performance
             </p>
           </div>
-          <Button variant="hero" size="lg">
-            <Plus className="h-4 w-4 mr-2" />
-            New Policy
-          </Button>
+          <div className="flex space-x-4">
+            <Button variant="hero" size="lg">
+              <Plus className="h-4 w-4 mr-2" />
+              New Research Project
+            </Button>
+            <Button variant="outline" size="lg">
+              <Bot className="h-4 w-4 mr-2" />
+              Deploy Agent
+            </Button>
+          </div>
         </div>
 
         <Tabs defaultValue="farmer" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 max-w-md">
-            <TabsTrigger value="farmer">Farmer View</TabsTrigger>
-            <TabsTrigger value="lp">LP View</TabsTrigger>
+            <TabsTrigger value="farmer">Research View</TabsTrigger>
+            <TabsTrigger value="lp">Compute View</TabsTrigger>
           </TabsList>
 
           <TabsContent value="farmer" className="space-y-6">
-            {/* Farmer Stats */}
+            {/* Research Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard
-                title="Total Coverage"
-                value={formatCurrency(farmerStats.totalCoverage)}
-                change={farmerStats.totalCoverage > 0 ? "+5.2%" : "No coverage"}
-                changeType={farmerStats.totalCoverage > 0 ? "positive" : "neutral"}
-                icon={Shield}
+                title="Total Projects"
+                value={researcherStats.totalProjects}
+                change="+3 this week"
+                changeType="positive"
+                icon={FileText}
                 variant="accent"
               />
               <StatCard
-                title="Active Policies"
-                value={farmerStats.activePolicies.toString()}
-                change="No change"
-                changeType="neutral"
-                icon={Eye}
+                title="Active Queries"
+                value={researcherStats.activeQueries}
+                change="+2 running"
+                changeType="positive"
+                icon={Brain}
               />
               <StatCard
-                title="Claims Pending"
-                value={farmerStats.claimsPending.toString()}
-                change={farmerStats.claimsPending > 0 ? "Processing" : "None"}
+                title="Processing Jobs"
+                value={researcherStats.processingJobs}
+                change="In progress"
                 changeType="neutral"
-                icon={AlertTriangle}
+                icon={Cpu}
                 variant="secondary"
               />
               <StatCard
-                title="Premiums Paid"
-                value={formatCurrency(farmerStats.premiumsPaid)}
-                change={farmerStats.premiumsPaid > 0 ? "+12.1%" : "No premiums"}
-                changeType={farmerStats.premiumsPaid > 0 ? "positive" : "neutral"}
-                icon={DollarSign}
+                title="Completed Analyses"
+                value={researcherStats.completedAnalyses}
+                change="+15 today"
+                changeType="positive"
+                icon={TrendingUp}
               />
             </div>
 
-            {/* Weather and Policies */}
+            {/* System Status and Research Projects */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-1">
-                {dashboardWeather ? (
-                  <WeatherWidget data={dashboardWeather} />
-                ) : (
-                  <Card className="shadow-card">
-                    <CardHeader>
-                      <CardTitle>Weather</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-center p-8">
-                        <Loader2 className="h-8 w-8 animate-spin" />
-                        <span className="ml-2">Loading weather data...</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                <Card className="shadow-card">
+                  <CardHeader>
+                    <CardTitle>System Status</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between">
+                      <span>Status:</span>
+                      <span className="text-success">{systemData.status}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Uptime:</span>
+                      <span className="font-medium">{systemData.uptime}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Active Connections:</span>
+                      <span className="font-medium">{systemData.activeConnections}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Data Processed:</span>
+                      <span className="font-medium">{systemData.dataProcessed}</span>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
               <div className="lg:col-span-2">
                 <Card className="shadow-card">
                   <CardHeader>
-                    <CardTitle>Active Policies</CardTitle>
+                    <CardTitle>Active Research Projects</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {userPolicies.length > 0 ? (
-                      <div className="space-y-4">
-                        {userPolicies.map((policy, index) => (
-                          <div key={policy?.id || index} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div className="flex items-center space-x-4">
-                              <div className="h-10 w-10 gradient-primary rounded-lg flex items-center justify-center">
-                                <span className="text-white font-semibold text-sm">
-                                  {policy?.cropType?.[0] || 'C'}
-                                </span>
-                              </div>
-                              <div>
-                                <p className="font-medium">{policy?.cropType || 'Unknown Crop'}</p>
-                                <p className="text-sm text-muted-foreground">
-                                  Coverage: {formatCurrency(policy?.coverageAmount)}
-                                </p>
-                              </div>
+                    <div className="space-y-4">
+                      {[
+                        { name: 'Climate Impact Analysis', type: 'Data Analysis', compute: '85% GPU', status: 'Running' },
+                        { name: 'Material Properties ML', type: 'Machine Learning', compute: '92% CPU', status: 'Training' },
+                        { name: 'Drug Discovery Pipeline', type: 'AI Automation', compute: '76% GPU', status: 'Processing' }
+                      ].map((project, index) => (
+                        <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:shadow-card transition-smooth">
+                          <div className="flex items-center space-x-4">
+                            <div className="h-10 w-10 gradient-primary rounded-lg flex items-center justify-center">
+                              <span className="text-white font-semibold text-sm">
+                                {project.name[0]}
+                              </span>
                             </div>
-                            <div className="text-right">
-                              <p className="font-medium">{formatCurrency(policy?.premiumAmount)}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {policy?.status === 'active' ? 'Active' :
-                                  policy?.status === 'pending_claim' ? 'Pending Claim' :
-                                    'Inactive'}
-                              </p>
+                            <div>
+                              <p className="font-medium">{project.name}</p>
+                              <p className="text-sm text-muted-foreground">Type: {project.type}</p>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-8">
-                        <p className="text-muted-foreground">No active policies found.</p>
-                        <Button className="mt-4" variant="outline">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Create Your First Policy
-                        </Button>
-                      </div>
-                    )}
+                          <div className="flex items-center space-x-4">
+                            <div className="text-right">
+                              <p className="font-medium">{project.compute}</p>
+                              <p className="text-sm text-muted-foreground">{project.status}</p>
+                            </div>
+                            <div className="flex space-x-2">
+                              <Button variant="ghost" size="sm">
+                                <Settings className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="sm">
+                                <Play className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -350,72 +218,64 @@ const DashboardContent: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="lp" className="space-y-6">
-            {/* LP Stats */}
+            {/* Compute Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard
-                title="Total Deposited"
-                value={formatCurrency(lpStats.totalDeposited)}
-                change="+15.3%"
+                title="Total Nodes"
+                value={computeStats.totalNodes}
+                change="+12 added"
                 changeType="positive"
                 icon={DollarSign}
                 variant="accent"
               />
               <StatCard
-                title="Current Yield"
-                value={formatPercentage(lpStats.currentYield)}
-                change="+2.1%"
+                title="Utilization"
+                value={computeStats.utilization}
+                change="+5.3%"
                 changeType="positive"
                 icon={TrendingUp}
               />
               <StatCard
-                title="Pool Utilization"
-                value={formatPercentage(lpStats.poolUtilization)}
-                change="+8.5%"
+                title="Avg Response Time"
+                value={computeStats.avgResponseTime}
+                change="-0.2s improved"
                 changeType="positive"
                 icon={Shield}
                 variant="secondary"
               />
               <StatCard
-                title="Total Earnings"
-                value={formatCurrency(lpStats.earnings)}
-                change="+18.2%"
+                title="Active Models"
+                value={computeStats.activeModels}
+                change="+3 deployed"
                 changeType="positive"
                 icon={TrendingUp}
               />
             </div>
 
-            {/* Pool Performance */}
+            {/* Compute Performance */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="shadow-card">
                 <CardHeader>
-                  <CardTitle>Pool Performance</CardTitle>
+                  <CardTitle>Network Performance</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span>Premium Income</span>
-                      <span className="font-semibold text-success">
-                        +{formatCurrency(poolStats?.totalPremiumsCollected || 0)}
-                      </span>
+                      <span>Compute Revenue</span>
+                      <span className="font-semibold text-success">+$42,300</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>Claims Payouts</span>
-                      <span className="font-semibold text-destructive">
-                        -{formatCurrency(poolStats?.totalPayoutsExecuted || 0)}
-                      </span>
+                      <span>Infrastructure Costs</span>
+                      <span className="font-semibold text-destructive">-$18,900</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>RWA Returns</span>
-                      <span className="font-semibold text-success">
-                        +{formatCurrency(poolStats?.currentRWAInvestment || 0)}
-                      </span>
+                      <span>Token Rewards</span>
+                      <span className="font-semibold text-success">+$8,450</span>
                     </div>
                     <div className="border-t pt-4">
                       <div className="flex justify-between items-center">
-                        <span className="font-semibold">Net Return</span>
-                        <span className="font-bold text-success">
-                          +{formatCurrency(lpStats.earnings)}
-                        </span>
+                        <span className="font-semibold">Net Performance</span>
+                        <span className="font-bold text-success">+$31,850</span>
                       </div>
                     </div>
                   </div>
@@ -424,44 +284,35 @@ const DashboardContent: React.FC = () => {
 
               <Card className="shadow-card">
                 <CardHeader>
-                  <CardTitle>Pool Allocation</CardTitle>
+                  <CardTitle>Resource Allocation</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Active Policies</span>
-                        <span>{formatPercentage(lpStats.poolUtilization)}</span>
+                        <span>AI Training</span>
+                        <span>45%</span>
                       </div>
                       <div className="h-2 bg-muted rounded-full">
-                        <div
-                          className="h-2 bg-primary rounded-full"
-                          style={{ width: `${lpStats.poolUtilization}%` }}
-                        ></div>
+                        <div className="h-2 bg-primary rounded-full" style={{ width: '45%' }}></div>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>RWA Investments</span>
-                        <span>{formatPercentage(poolStats?.rwaTargetPercentage || 0)}</span>
+                        <span>Data Analysis</span>
+                        <span>35%</span>
                       </div>
                       <div className="h-2 bg-muted rounded-full">
-                        <div
-                          className="h-2 bg-secondary rounded-full"
-                          style={{ width: `${poolStats?.rwaTargetPercentage || 0}%` }}
-                        ></div>
+                        <div className="h-2 bg-secondary rounded-full" style={{ width: '35%' }}></div>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Reserve Buffer</span>
-                        <span>{formatPercentage(Math.max(0, 100 - lpStats.poolUtilization - (poolStats?.rwaTargetPercentage || 0)))}</span>
+                        <span>Available</span>
+                        <span>20%</span>
                       </div>
                       <div className="h-2 bg-muted rounded-full">
-                        <div
-                          className="h-2 bg-accent rounded-full"
-                          style={{ width: `${Math.max(0, 100 - lpStats.poolUtilization - (poolStats?.rwaTargetPercentage || 0))}%` }}
-                        ></div>
+                        <div className="h-2 bg-accent rounded-full" style={{ width: '20%' }}></div>
                       </div>
                     </div>
                   </div>
@@ -470,7 +321,40 @@ const DashboardContent: React.FC = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Quick Actions Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="shadow-card hover-lift cursor-pointer">
+            <CardContent className="p-6 text-center">
+              <Upload className="h-12 w-12 text-primary mx-auto mb-4" />
+              <h3 className="font-semibold mb-2">Upload Dataset</h3>
+              <p className="text-sm text-muted-foreground">Upload research data for AI analysis</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-card hover-lift cursor-pointer">
+            <CardContent className="p-6 text-center">
+              <Bot className="h-12 w-12 text-secondary mx-auto mb-4" />
+              <h3 className="font-semibold mb-2">Create AI Agent</h3>
+              <p className="text-sm text-muted-foreground">Deploy custom research agents</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-card hover-lift cursor-pointer">
+            <CardContent className="p-6 text-center">
+              <Brain className="h-12 w-12 text-accent mx-auto mb-4" />
+              <h3 className="font-semibold mb-2">Train Model</h3>
+              <p className="text-sm text-muted-foreground">Train ML models on research data</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-card hover-lift cursor-pointer">
+            <CardContent className="p-6 text-center">
+              <Download className="h-12 w-12 text-primary mx-auto mb-4" />
+              <h3 className="font-semibold mb-2">Export Results</h3>
+              <p className="text-sm text-muted-foreground">Download analysis and insights</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };

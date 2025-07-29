@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import StatCard from '@/components/ui/StatCard';
-import { useFlowAuth } from '@/hooks/useFlowAuth';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import StatCard from '../components/ui/StatCard';
+import { useFlowAuth } from '../hooks/useFlowAuth';
 import {
   ArrowRight,
   Brain,
