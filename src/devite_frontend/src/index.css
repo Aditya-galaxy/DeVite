@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DeVite Scientific Research Platform Design System
+Trustworthy blue theme with yellow-orange accents for scientific credibility
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Core research theme - clean whites */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
+
+    /* Deep blue - scientific trust and reliability */
+    --primary: 214 84% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 214 70% 70%;
+    --primary-dark: 214 95% 45%;
+
+    /* Dark black/gray - professional */
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 0 0% 20%;
+    --secondary-dark: 0 0% 4%;
+
+    /* Yellow-orange accent - energy and innovation */
+    --accent: 42 96% 64%;
+    --accent-foreground: 0 0% 8%;
+    --accent-light: 42 80% 75%;
+    --accent-dark: 42 100% 55%;
+
+    /* Neutral grays */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    /* Status colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 0 0% 8%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89%;
+    --input: 0 0% 95%;
+    --ring: 214 84% 56%;
+
+    --radius: 0.75rem;
+
+    /* Solid backgrounds - Matlab style (no gradients) */
+    --gradient-primary: hsl(var(--primary));
+    --gradient-secondary: hsl(var(--secondary));
+    --gradient-accent: hsl(var(--accent));
+    --gradient-hero: hsl(var(--primary));
+    --gradient-card: hsl(var(--card));
+
+    /* Shadows with blue scientific theme */
+    --shadow-primary: 0 10px 25px -5px hsl(var(--primary) / 0.2);
+    --shadow-secondary: 0 10px 25px -5px hsl(var(--secondary) / 0.15);
+    --shadow-accent: 0 10px 25px -5px hsl(var(--accent) / 0.2);
+    --shadow-card: 0 4px 20px -2px hsl(var(--foreground) / 0.08);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 15%;
+    --sidebar-primary: 214 84% 56%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 94%;
+    --sidebar-accent-foreground: 0 0% 15%;
+    --sidebar-border: 0 0% 87%;
+    --sidebar-ring: 214 84% 56%;
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 214 84% 65%;
+    --primary-foreground: 0 0% 8%;
+    --primary-light: 214 70% 75%;
+    --primary-dark: 214 95% 55%;
+
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 8%;
+    --secondary-light: 0 0% 98%;
+    --secondary-dark: 0 0% 85%;
+
+    --accent: 42 96% 70%;
+    --accent-foreground: 0 0% 8%;
+    --accent-light: 42 80% 80%;
+    --accent-dark: 42 100% 60%;
+
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 55%;
+
+    --success: 142 76% 46%;
+    --success-foreground: 0 0% 98%;
+    --warning: 48 96% 63%;
+    --warning-foreground: 0 0% 8%;
+    --destructive: 0 84% 70%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 12%;
+    --input: 0 0% 10%;
+    --ring: 214 84% 65%;
+
+    /* Solid backgrounds - Matlab style (no gradients) */
+    --gradient-primary: hsl(var(--primary));
+    --gradient-secondary: hsl(var(--secondary));
+    --gradient-accent: hsl(var(--accent));
+    --gradient-hero: hsl(var(--primary));
+    --gradient-card: hsl(var(--card));
+
+    --sidebar-background: 0 0% 6%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 214 84% 65%;
+    --sidebar-primary-foreground: 0 0% 8%;
+    --sidebar-accent: 0 0% 8%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 12%;
+    --sidebar-ring: 214 84% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer components {
+
+  /* DeVite Scientific Research Platform Component Styles - Matlab Style */
+  .bg-primary-solid {
+    background: hsl(var(--primary));
+  }
+
+  .bg-secondary-solid {
+    background: hsl(var(--secondary));
+  }
+
+  .bg-accent-solid {
+    background: hsl(var(--accent));
+  }
+
+  .bg-hero-solid {
+    background: hsl(var(--primary));
+  }
+
+  .bg-card-solid {
+    background: hsl(var(--card));
+  }
+
+  .shadow-primary {
+    box-shadow: var(--shadow-primary);
+  }
+
+  .shadow-secondary {
+    box-shadow: var(--shadow-secondary);
+  }
+
+  .shadow-accent {
+    box-shadow: var(--shadow-accent);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
+  /* Animated elements */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+  }
+
+  /* Interactive elements */
+  .hover-lift {
+    @apply transition-smooth hover:scale-105 hover:shadow-card;
+  }
+
+  .hover-glow {
+    @apply transition-smooth hover:shadow-glow;
+  }
+}
