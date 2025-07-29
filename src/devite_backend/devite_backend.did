@@ -6,7 +6,7 @@ type CreateUserRequest = record {
 };
 
 type UserProfile = record {
-  principal : principal;
+  "principal" : principal;
   username : text;
   email : text;
   institution : text;

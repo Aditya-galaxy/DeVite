@@ -1,16 +1,81 @@
-use candid::{CandidType, Deserialize, Principal};
+use candid::{CandidType, Deserialize, Principal, Encode, Decode};
 use ic_cdk::api::management_canister::main::*;
-use ic_cdk_macros::*;
+use ic_cdk::{query, update};
 use ic_stable_structures::memory_manager::{MemoryId, MemoryManager, VirtualMemory};
-use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap};
+use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap, Storable, BoundedStorable};
 use std::cell::RefCell;
+use std::borrow::Cow;
 
 type Memory = VirtualMemory<DefaultMemoryImpl>;
-type UserStore = StableBTreeMap<Principal, UserProfile, Memory>;
+
+// Wrapper types to work around orphan rules
+#[derive(Clone, Debug, CandidType, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct StorablePrincipal(pub Principal);
+
+impl From<Principal> for StorablePrincipal {
+    fn from(p: Principal) -> Self {
+        StorablePrincipal(p)
+    }
+}
+
+impl From<StorablePrincipal> for Principal {
+    fn from(sp: StorablePrincipal) -> Self {
+        sp.0
+    }
+}
+
+impl Storable for StorablePrincipal {
+    fn to_bytes(&self) -> Cow<[u8]> {
+        Cow::Owned(Encode!(&self.0).unwrap())
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        let principal: Principal = Decode!(bytes.as_ref(), Principal).unwrap();
+        StorablePrincipal(principal)
+    }
+}
+
+impl BoundedStorable for StorablePrincipal {
+    const MAX_SIZE: u32 = 29;
+    const IS_FIXED_SIZE: bool = false;
+}
+
+#[derive(Clone, Debug, CandidType, Deserialize)]
+pub struct StorableVecU64(pub Vec<u64>);
+
+impl From<Vec<u64>> for StorableVecU64 {
+    fn from(v: Vec<u64>) -> Self {
+        StorableVecU64(v)
+    }
+}
+
+impl From<StorableVecU64> for Vec<u64> {
+    fn from(sv: StorableVecU64) -> Self {
+        sv.0
+    }
+}
+
+impl Storable for StorableVecU64 {
+    fn to_bytes(&self) -> Cow<[u8]> {
+        Cow::Owned(Encode!(&self.0).unwrap())
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        let vec: Vec<u64> = Decode!(bytes.as_ref(), Vec<u64>).unwrap();
+        StorableVecU64(vec)
+    }
+}
+
+impl BoundedStorable for StorableVecU64 {
+    const MAX_SIZE: u32 = 8192;
+    const IS_FIXED_SIZE: bool = false;
+}
+
+type UserStore = StableBTreeMap<StorablePrincipal, UserProfile, Memory>;
 type TokenStorage = StableBTreeMap<u64, ResearchNFT, Memory>;
-type OwnerStorage = StableBTreeMap<Principal, Vec<u64>, Memory>;
+type OwnerStorage = StableBTreeMap<StorablePrincipal, StorableVecU64, Memory>;
 type ProposalStorage = StableBTreeMap<u64, Proposal, Memory>;
-type GovernanceTokenStorage = StableBTreeMap<Principal, u64, Memory>;
+type GovernanceTokenStorage = StableBTreeMap<StorablePrincipal, u64, Memory>;
 
 // USER MANAGEMENT TYPES
 
@@ -23,6 +88,21 @@ pub struct UserProfile {
     pub research_domains: Vec<String>,
     pub personal_canister_id: Option<Principal>,
     pub created_at: u64,
+}
+
+impl Storable for UserProfile {
+    fn to_bytes(&self) -> Cow<[u8]> {
+        Cow::Owned(Encode!(self).unwrap())
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        Decode!(bytes.as_ref(), Self).unwrap()
+    }
+}
+
+impl BoundedStorable for UserProfile {
+    const MAX_SIZE: u32 = 2048;
+    const IS_FIXED_SIZE: bool = false;
 }
 
 #[derive(Clone, Debug, CandidType, Deserialize)]
@@ -47,6 +127,21 @@ pub struct ResearchNFT {
     pub license: License,
     pub created_at: u64,
     pub metadata: ResearchMetadata,
+}
+
+impl Storable for ResearchNFT {
+    fn to_bytes(&self) -> Cow<[u8]> {
+        Cow::Owned(Encode!(self).unwrap())
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        Decode!(bytes.as_ref(), Self).unwrap()
+    }
+}
+
+impl BoundedStorable for ResearchNFT {
+    const MAX_SIZE: u32 = 4096;
+    const IS_FIXED_SIZE: bool = false;
 }
 
 #[derive(Clone, Debug, CandidType, Deserialize)]
@@ -102,7 +197,22 @@ pub struct Proposal {
     pub voting_ends_at: u64,
 }
 
-#[derive(Clone, Debug, CandidType, Deserialize)]
+impl Storable for Proposal {
+    fn to_bytes(&self) -> Cow<[u8]> {
+        Cow::Owned(Encode!(self).unwrap())
+    }
+
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
+        Decode!(bytes.as_ref(), Self).unwrap()
+    }
+}
+
+impl BoundedStorable for Proposal {
+    const MAX_SIZE: u32 = 4096;
+    const IS_FIXED_SIZE: bool = false;
+}
+
+#[derive(Clone, Debug, CandidType, Deserialize, PartialEq)]
 pub enum ProposalType {
     PlatformUpgrade,
     ResearchStandard,
@@ -110,7 +220,7 @@ pub enum ProposalType {
     GovernanceChange,
 }
 
-#[derive(Clone, Debug, CandidType, Deserialize)]
+#[derive(Clone, Debug, CandidType, Deserialize, PartialEq)]
 pub enum ProposalStatus {
     Active,
     Passed,
@@ -207,9 +317,10 @@ const INITIAL_GOVERNANCE_TOKENS: u64 = 1000;
 #[update]
 async fn register_user(request: CreateUserRequest) -> Result<UserProfile, String> {
     let caller = ic_cdk::api::caller();
+    let storable_caller = StorablePrincipal::from(caller);
     
     // Check if user already exists
-    if USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&caller)) {
+    if USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&storable_caller)) {
         return Err("User already registered".to_string());
     }
     
@@ -227,12 +338,12 @@ async fn register_user(request: CreateUserRequest) -> Result<UserProfile, String
     };
     
     USER_PROFILES.with(|profiles| {
-        profiles.borrow_mut().insert(caller, user_profile.clone())
+        profiles.borrow_mut().insert(storable_caller.clone(), user_profile.clone())
     });
     
     // Award initial governance tokens
     GOVERNANCE_TOKENS.with(|tokens| {
-        tokens.borrow_mut().insert(caller, INITIAL_GOVERNANCE_TOKENS);
+        tokens.borrow_mut().insert(storable_caller, INITIAL_GOVERNANCE_TOKENS);
     });
     
     Ok(user_profile)
@@ -248,7 +359,7 @@ async fn create_personal_canister(owner: Principal) -> Result<Principal, String>
         }),
     };
     
-    match create_canister(create_args, 1_000_000_000_000u128).await {
+    match create_canister(create_args).await {
         Ok((canister_id,)) => {
             // Note: In a real implementation, you would install the personal storage WASM here
             // install_personal_storage_code(canister_id.canister_id, owner).await?;
@@ -260,7 +371,8 @@ async fn create_personal_canister(owner: Principal) -> Result<Principal, String>
 
 #[query]
 fn get_user_profile(user_id: Principal) -> Option<UserProfile> {
-    USER_PROFILES.with(|profiles| profiles.borrow().get(&user_id))
+    let storable_user = StorablePrincipal::from(user_id);
+    USER_PROFILES.with(|profiles| profiles.borrow().get(&storable_user))
 }
 
 #[query]
@@ -281,9 +393,10 @@ fn list_all_users() -> Vec<UserProfile> {
 #[update]
 fn mint_research_nft(request: MintRequest) -> Result<u64, String> {
     let caller = ic_cdk::api::caller();
+    let storable_caller = StorablePrincipal::from(caller);
     
     // Check if user is registered
-    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&caller)) {
+    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&storable_caller)) {
         return Err("User must be registered first".to_string());
     }
     
@@ -313,15 +426,18 @@ fn mint_research_nft(request: MintRequest) -> Result<u64, String> {
     
     // Update owner's token list
     TOKEN_OWNERS.with(|owners| {
-        let mut owner_tokens = owners.borrow().get(&caller).unwrap_or_default();
+        let mut owner_tokens = owners.borrow()
+            .get(&storable_caller)
+            .map(|v| v.0.clone())
+            .unwrap_or_default();
         owner_tokens.push(token_id);
-        owners.borrow_mut().insert(caller, owner_tokens);
+        owners.borrow_mut().insert(storable_caller.clone(), StorableVecU64::from(owner_tokens));
     });
     
     // Award governance tokens for contributing research
     GOVERNANCE_TOKENS.with(|tokens| {
-        let current_balance = tokens.borrow().get(&caller).unwrap_or(0);
-        tokens.borrow_mut().insert(caller, current_balance + 50); // 50 tokens for minting
+        let current_balance = tokens.borrow().get(&storable_caller).unwrap_or(0);
+        tokens.borrow_mut().insert(storable_caller, current_balance + 50); // 50 tokens for minting
     });
     
     Ok(token_id)
@@ -334,7 +450,13 @@ fn get_research_token(token_id: u64) -> Option<ResearchNFT> {
 
 #[query]
 fn get_tokens_by_owner(owner: Principal) -> Vec<u64> {
-    TOKEN_OWNERS.with(|owners| owners.borrow().get(&owner).unwrap_or_default())
+    let storable_owner = StorablePrincipal::from(owner);
+    TOKEN_OWNERS.with(|owners| {
+        owners.borrow()
+            .get(&storable_owner)
+            .map(|v| v.0.clone())
+            .unwrap_or_default()
+    })
 }
 
 #[query]
@@ -365,17 +487,20 @@ fn search_research_by_keyword(keyword: String) -> Vec<ResearchNFT> {
 #[update]
 fn transfer_research_token(token_id: u64, to: Principal) -> Result<(), String> {
     let caller = ic_cdk::api::caller();
+    let storable_caller = StorablePrincipal::from(caller);
+    let storable_to = StorablePrincipal::from(to);
     
+    // Get the token first
     let mut token = RESEARCH_TOKENS.with(|tokens| {
-        tokens.borrow().get(&token_id).ok_or("Token not found")?
-    });
+        tokens.borrow().get(&token_id)
+    }).ok_or("Token not found")?;
     
     if token.owner != caller {
         return Err("Not the owner".to_string());
     }
     
     // Check if recipient is registered
-    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&to)) {
+    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&storable_to)) {
         return Err("Recipient must be registered".to_string());
     }
     
@@ -388,14 +513,20 @@ fn transfer_research_token(token_id: u64, to: Principal) -> Result<(), String> {
     // Update ownership records
     TOKEN_OWNERS.with(|owners| {
         // Remove from old owner
-        let mut old_owner_tokens = owners.borrow().get(&caller).unwrap_or_default();
+        let mut old_owner_tokens = owners.borrow()
+            .get(&storable_caller)
+            .map(|v| v.0.clone())
+            .unwrap_or_default();
         old_owner_tokens.retain(|&id| id != token_id);
-        owners.borrow_mut().insert(caller, old_owner_tokens);
+        owners.borrow_mut().insert(storable_caller, StorableVecU64::from(old_owner_tokens));
         
         // Add to new owner
-        let mut new_owner_tokens = owners.borrow().get(&to).unwrap_or_default();
+        let mut new_owner_tokens = owners.borrow()
+            .get(&storable_to)
+            .map(|v| v.0.clone())
+            .unwrap_or_default();
         new_owner_tokens.push(token_id);
-        owners.borrow_mut().insert(to, new_owner_tokens);
+        owners.borrow_mut().insert(storable_to, StorableVecU64::from(new_owner_tokens));
     });
     
     Ok(())
@@ -411,15 +542,16 @@ fn total_research_tokens() -> u64 {
 #[update]
 fn create_proposal(request: CreateProposalRequest) -> Result<u64, String> {
     let caller = ic_cdk::api::caller();
+    let storable_caller = StorablePrincipal::from(caller);
     
     // Check if caller is registered
-    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&caller)) {
+    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&storable_caller)) {
         return Err("User must be registered first".to_string());
     }
     
     // Check if caller has enough tokens to create proposal
     let caller_tokens = GOVERNANCE_TOKENS.with(|tokens| {
-        tokens.borrow().get(&caller).unwrap_or(0)
+        tokens.borrow().get(&storable_caller).unwrap_or(0)
     });
     
     if caller_tokens < MIN_PROPOSAL_THRESHOLD {
@@ -456,15 +588,16 @@ fn create_proposal(request: CreateProposalRequest) -> Result<u64, String> {
 #[update]
 fn vote_on_proposal(proposal_id: u64, vote: Vote) -> Result<(), String> {
     let caller = ic_cdk::api::caller();
+    let storable_caller = StorablePrincipal::from(caller);
     
     // Check if caller is registered
-    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&caller)) {
+    if !USER_PROFILES.with(|profiles| profiles.borrow().contains_key(&storable_caller)) {
         return Err("User must be registered first".to_string());
     }
     
     // Get caller's voting power
     let voting_power = GOVERNANCE_TOKENS.with(|tokens| {
-        tokens.borrow().get(&caller).unwrap_or(0)
+        tokens.borrow().get(&storable_caller).unwrap_or(0)
     });
     
     if voting_power == 0 {
@@ -543,7 +676,8 @@ fn get_proposal(proposal_id: u64) -> Option<Proposal> {
 
 #[query]
 fn get_governance_token_balance(user: Principal) -> u64 {
-    GOVERNANCE_TOKENS.with(|tokens| tokens.borrow().get(&user).unwrap_or(0))
+    let storable_user = StorablePrincipal::from(user);
+    GOVERNANCE_TOKENS.with(|tokens| tokens.borrow().get(&storable_user).unwrap_or(0))
 }
 
 #[query]
