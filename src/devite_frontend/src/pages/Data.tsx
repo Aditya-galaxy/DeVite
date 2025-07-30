@@ -4,78 +4,86 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Search, Filter, Shield, Award, FileText, DollarSign, Zap, Clock } from 'lucide-react';
+import { Search, Filter, Shield, Lock, Database, Key, Globe, FileCheck } from 'lucide-react';
 
-const IPOwnership: React.FC = () => {
+const Data: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedType, setSelectedType] = useState('all');
     const [selectedStatus, setSelectedStatus] = useState('all');
 
-    const intellectualProperties = [
+    const dataVaults = [
         {
             id: 1,
-            title: 'Quantum Error Correction Algorithm',
-            type: 'Algorithm',
+            name: 'Genomics Research Vault',
             owner: 'Dr. Sarah Chen',
-            institution: 'MIT Quantum Lab',
-            value: 850000,
-            royalties: 12500,
-            status: 'Active',
-            licensees: 8,
-            tokenId: 'QEC-2024-001',
-            verifications: 47,
-            citations: 156
+            institution: 'Stanford Medical Research',
+            type: 'Genomic Data',
+            size: '2.4 TB',
+            records: 150000,
+            encryption: 'AES-256',
+            access: 'Restricted',
+            collaborators: 8,
+            downloads: 1247,
+            citations: 89,
+            value: 450000,
+            status: 'Active'
         },
         {
             id: 2,
-            title: 'Novel Protein Folding Prediction Model',
-            type: 'AI Model',
+            name: 'Climate Model Dataset',
             owner: 'Dr. Michael Rodriguez',
-            institution: 'Stanford Bio-AI',
-            value: 1200000,
-            royalties: 18750,
-            status: 'Active',
-            licensees: 12,
-            tokenId: 'PFP-2024-002',
-            verifications: 62,
-            citations: 203
+            institution: 'NOAA Research Division',
+            type: 'Environmental Data',
+            size: '5.1 TB',
+            records: 890000,
+            encryption: 'Quantum-Safe',
+            access: 'Public',
+            collaborators: 23,
+            downloads: 3421,
+            citations: 156,
+            value: 320000,
+            status: 'Active'
         },
         {
             id: 3,
-            title: 'Decentralized Research Methodology Framework',
-            type: 'Methodology',
+            name: 'Pharmaceutical Trials Archive',
             owner: 'Dr. Emma Thompson',
-            institution: 'Oxford Research Institute',
-            value: 650000,
-            royalties: 9200,
-            status: 'Pending',
-            licensees: 5,
-            tokenId: 'DRM-2024-003',
-            verifications: 23,
-            citations: 89
+            institution: 'Oxford Drug Discovery',
+            type: 'Clinical Data',
+            size: '1.8 TB',
+            records: 75000,
+            encryption: 'Multi-layer',
+            access: 'Licensed',
+            collaborators: 12,
+            downloads: 892,
+            citations: 67,
+            value: 680000,
+            status: 'Pending'
         },
         {
             id: 4,
-            title: 'Climate Data Analysis Pipeline',
-            type: 'Software',
+            name: 'Neural Network Training Sets',
             owner: 'Dr. Alex Kumar',
-            institution: 'CERN Data Science',
-            value: 950000,
-            royalties: 14300,
-            status: 'Active',
-            licensees: 15,
-            tokenId: 'CDA-2024-004',
-            verifications: 38,
-            citations: 127
+            institution: 'MIT AI Lab',
+            type: 'Machine Learning',
+            size: '8.7 TB',
+            records: 2400000,
+            encryption: 'End-to-End',
+            access: 'Consortium',
+            collaborators: 45,
+            downloads: 5678,
+            citations: 234,
+            value: 920000,
+            status: 'Active'
         }
     ];
 
-    const getTypeBadgeVariant = (type: string) => {
-        switch (type) {
-            case 'Algorithm': return 'default';
-            case 'AI Model': return 'secondary';
-            case 'Methodology': return 'outline';
-            case 'Software': return 'destructive';
+    const getAccessBadgeVariant = (access: string) => {
+        switch (access) {
+            case 'Public': return 'secondary';
+            case 'Restricted': return 'destructive';
+            case 'Licensed': return 'default';
+            case 'Consortium': return 'outline';
             default: return 'default';
         }
     };
@@ -84,16 +92,16 @@ const IPOwnership: React.FC = () => {
         switch (status) {
             case 'Active': return 'default';
             case 'Pending': return 'secondary';
-            case 'Disputed': return 'destructive';
-            default: return 'default';
+            case 'Suspended': return 'destructive';
+            default: return 'outline';
         }
     };
 
-    const filteredIPs = intellectualProperties.filter(ip => {
-        const matchesSearch = ip.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ip.owner.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesType = selectedType === 'all' || ip.type.toLowerCase().includes(selectedType);
-        const matchesStatus = selectedStatus === 'all' || ip.status.toLowerCase() === selectedStatus;
+    const filteredVaults = dataVaults.filter(vault => {
+        const matchesSearch = vault.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            vault.owner.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesType = selectedType === 'all' || vault.type.toLowerCase().includes(selectedType);
+        const matchesStatus = selectedStatus === 'all' || vault.status.toLowerCase() === selectedStatus;
 
         return matchesSearch && matchesType && matchesStatus;
     });
@@ -102,52 +110,52 @@ const IPOwnership: React.FC = () => {
         <div className="container py-8 space-y-8">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold">NFT-Based IP Ownership</h1>
+                    <h1 className="text-3xl font-bold">Data Sovereignty</h1>
                     <p className="text-muted-foreground">
-                        Secure, transparent intellectual property rights on the blockchain
+                        Secure, encrypted data vaults with complete ownership control
                     </p>
                 </div>
                 <Button className="gradient-primary">
-                    Register New IP
+                    Create Data Vault
                 </Button>
             </div>
 
-            {/* Stats Overview */}
+            {/* Security Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card className="shadow-card">
                     <CardContent className="p-6 text-center">
                         <div className="h-12 w-12 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <Shield className="h-6 w-6 text-white" />
+                            <Database className="h-6 w-6 text-white" />
                         </div>
-                        <p className="text-2xl font-bold">2,847</p>
-                        <p className="text-sm text-muted-foreground">Protected IPs</p>
+                        <p className="text-2xl font-bold">1,847</p>
+                        <p className="text-sm text-muted-foreground">Secure Vaults</p>
                     </CardContent>
                 </Card>
                 <Card className="shadow-card">
                     <CardContent className="p-6 text-center">
                         <div className="h-12 w-12 gradient-secondary rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <DollarSign className="h-6 w-6 text-white" />
+                            <Shield className="h-6 w-6 text-white" />
                         </div>
-                        <p className="text-2xl font-bold">$12.4M</p>
-                        <p className="text-sm text-muted-foreground">Total Value Locked</p>
+                        <p className="text-2xl font-bold">847 PB</p>
+                        <p className="text-sm text-muted-foreground">Protected Data</p>
                     </CardContent>
                 </Card>
                 <Card className="shadow-card">
                     <CardContent className="p-6 text-center">
                         <div className="h-12 w-12 gradient-accent rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <Award className="h-6 w-6 text-white" />
+                            <Key className="h-6 w-6 text-white" />
                         </div>
-                        <p className="text-2xl font-bold">156</p>
-                        <p className="text-sm text-muted-foreground">Active Licenses</p>
+                        <p className="text-2xl font-bold">100%</p>
+                        <p className="text-sm text-muted-foreground">Encryption Rate</p>
                     </CardContent>
                 </Card>
                 <Card className="shadow-card">
                     <CardContent className="p-6 text-center">
                         <div className="h-12 w-12 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <Zap className="h-6 w-6 text-white" />
+                            <FileCheck className="h-6 w-6 text-white" />
                         </div>
-                        <p className="text-2xl font-bold">98.7%</p>
-                        <p className="text-sm text-muted-foreground">Verification Rate</p>
+                        <p className="text-2xl font-bold">99.9%</p>
+                        <p className="text-sm text-muted-foreground">Data Integrity</p>
                     </CardContent>
                 </Card>
             </div>
@@ -157,7 +165,7 @@ const IPOwnership: React.FC = () => {
                 <CardHeader>
                     <CardTitle className="flex items-center">
                         <Filter className="h-5 w-5 mr-2" />
-                        Filter Intellectual Properties
+                        Filter Data Vaults
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -165,7 +173,7 @@ const IPOwnership: React.FC = () => {
                         <div className="relative">
                             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="Search IPs..."
+                                placeholder="Search vaults..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-10"
@@ -173,14 +181,14 @@ const IPOwnership: React.FC = () => {
                         </div>
                         <Select value={selectedType} onValueChange={setSelectedType}>
                             <SelectTrigger>
-                                <SelectValue placeholder="Select type" />
+                                <SelectValue placeholder="Select data type" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">All Types</SelectItem>
-                                <SelectItem value="algorithm">Algorithm</SelectItem>
-                                <SelectItem value="model">AI Model</SelectItem>
-                                <SelectItem value="methodology">Methodology</SelectItem>
-                                <SelectItem value="software">Software</SelectItem>
+                                <SelectItem value="genomic">Genomic Data</SelectItem>
+                                <SelectItem value="environmental">Environmental Data</SelectItem>
+                                <SelectItem value="clinical">Clinical Data</SelectItem>
+                                <SelectItem value="machine">Machine Learning</SelectItem>
                             </SelectContent>
                         </Select>
                         <Select value={selectedStatus} onValueChange={setSelectedStatus}>
@@ -191,7 +199,7 @@ const IPOwnership: React.FC = () => {
                                 <SelectItem value="all">All Status</SelectItem>
                                 <SelectItem value="active">Active</SelectItem>
                                 <SelectItem value="pending">Pending</SelectItem>
-                                <SelectItem value="disputed">Disputed</SelectItem>
+                                <SelectItem value="suspended">Suspended</SelectItem>
                             </SelectContent>
                         </Select>
                         <Button variant="outline" className="w-full">
@@ -201,32 +209,32 @@ const IPOwnership: React.FC = () => {
                 </CardContent>
             </Card>
 
-            {/* IP Grid */}
+            {/* Vault Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {filteredIPs.map((ip) => (
-                    <Card key={ip.id} className="hover-lift shadow-card">
+                {filteredVaults.map((vault) => (
+                    <Card key={vault.id} className="hover-lift shadow-card">
                         <CardHeader>
                             <div className="flex items-start justify-between">
                                 <div className="flex items-start space-x-3">
                                     <div className="h-12 w-12 gradient-primary rounded-lg flex items-center justify-center">
-                                        <FileText className="h-6 w-6 text-white" />
+                                        <Database className="h-6 w-6 text-white" />
                                     </div>
                                     <div className="flex-1">
-                                        <CardTitle className="text-lg leading-tight">{ip.title}</CardTitle>
+                                        <CardTitle className="text-lg leading-tight">{vault.name}</CardTitle>
                                         <p className="text-sm text-muted-foreground mt-1">
-                                            {ip.owner} • {ip.institution}
+                                            {vault.owner} • {vault.institution}
                                         </p>
                                         <p className="text-xs text-muted-foreground mt-1">
-                                            Token ID: {ip.tokenId}
+                                            Type: {vault.type}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <Badge variant={getTypeBadgeVariant(ip.type) as any}>
-                                        {ip.type}
+                                    <Badge variant={getAccessBadgeVariant(vault.access) as any}>
+                                        {vault.access}
                                     </Badge>
-                                    <Badge variant={getStatusBadgeVariant(ip.status) as any}>
-                                        {ip.status}
+                                    <Badge variant={getStatusBadgeVariant(vault.status) as any}>
+                                        {vault.status}
                                     </Badge>
                                 </div>
                             </div>
@@ -235,48 +243,56 @@ const IPOwnership: React.FC = () => {
                             <div className="grid grid-cols-3 gap-4">
                                 <div className="text-center p-3 bg-muted/30 rounded-lg">
                                     <div className="flex items-center justify-center mb-1">
-                                        <DollarSign className="h-4 w-4 text-primary mr-1" />
+                                        <Database className="h-4 w-4 text-primary mr-1" />
                                     </div>
-                                    <p className="text-sm text-muted-foreground">Value</p>
-                                    <p className="font-bold">${(ip.value / 1000).toFixed(0)}K</p>
+                                    <p className="text-sm text-muted-foreground">Size</p>
+                                    <p className="font-bold">{vault.size}</p>
                                 </div>
                                 <div className="text-center p-3 bg-muted/30 rounded-lg">
                                     <div className="flex items-center justify-center mb-1">
-                                        <Award className="h-4 w-4 text-secondary mr-1" />
+                                        <FileCheck className="h-4 w-4 text-secondary mr-1" />
                                     </div>
-                                    <p className="text-sm text-muted-foreground">Licensees</p>
-                                    <p className="font-bold">{ip.licensees}</p>
+                                    <p className="text-sm text-muted-foreground">Records</p>
+                                    <p className="font-bold text-xs">{vault.records.toLocaleString()}</p>
                                 </div>
                                 <div className="text-center p-3 bg-muted/30 rounded-lg">
                                     <div className="flex items-center justify-center mb-1">
                                         <Shield className="h-4 w-4 text-accent mr-1" />
                                     </div>
-                                    <p className="text-sm text-muted-foreground">Verifications</p>
-                                    <p className="font-bold">{ip.verifications}</p>
+                                    <p className="text-sm text-muted-foreground">Encryption</p>
+                                    <p className="font-bold text-xs">{vault.encryption}</p>
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <div className="flex justify-between">
-                                    <span className="text-sm text-muted-foreground">Monthly Royalties:</span>
-                                    <span className="text-sm font-medium">${ip.royalties.toLocaleString()}</span>
+                                    <span className="text-sm text-muted-foreground">Collaborators:</span>
+                                    <span className="text-sm font-medium">{vault.collaborators}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-sm text-muted-foreground">Downloads:</span>
+                                    <span className="text-sm font-medium">{vault.downloads.toLocaleString()}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-muted-foreground">Citations:</span>
-                                    <span className="text-sm font-medium">{ip.citations}</span>
+                                    <span className="text-sm font-medium">{vault.citations}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-sm text-muted-foreground">Estimated Value:</span>
+                                    <span className="text-sm font-medium">${vault.value.toLocaleString()}</span>
                                 </div>
                             </div>
 
                             <div className="pt-2 border-t space-y-2">
-                                <Button className="w-full" variant="hero">
-                                    License IP
+                                <Button className="w-full" variant="hero" disabled={vault.status !== 'Active'}>
+                                    {vault.access === 'Public' ? 'Access Data' : 'Request Access'}
                                 </Button>
                                 <div className="flex gap-2">
                                     <Button variant="outline" size="sm" className="flex-1">
-                                        View Details
+                                        View Metadata
                                     </Button>
                                     <Button variant="outline" size="sm" className="flex-1">
-                                        Verify Ownership
+                                        Security Audit
                                     </Button>
                                 </div>
                             </div>
@@ -285,15 +301,15 @@ const IPOwnership: React.FC = () => {
                 ))}
             </div>
 
-            {filteredIPs.length === 0 && (
+            {filteredVaults.length === 0 && (
                 <Card className="shadow-card">
                     <CardContent className="text-center py-12">
                         <div className="h-16 w-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
                             <Search className="h-8 w-8 text-white" />
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">No intellectual properties found</h3>
+                        <h3 className="text-lg font-semibold mb-2">No data vaults found</h3>
                         <p className="text-muted-foreground">
-                            Try adjusting your search criteria or register a new IP.
+                            Try adjusting your search criteria or create a new secure data vault.
                         </p>
                     </CardContent>
                 </Card>
@@ -302,4 +318,4 @@ const IPOwnership: React.FC = () => {
     );
 };
 
-export default IPOwnership;
+export default Data;

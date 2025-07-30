@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Search, Filter, Cpu, Zap, Server, TrendingUp, Clock, Globe } from 'lucide-react';
 
-const AIProcessing: React.FC = () => {
+const AI: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedModel, setSelectedModel] = useState('all');
     const [selectedRegion, setSelectedRegion] = useState('all');
@@ -298,4 +298,4 @@ const AIProcessing: React.FC = () => {
     );
 };
 
-export default AIProcessing;
+export default AI;

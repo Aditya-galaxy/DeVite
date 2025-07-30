@@ -17,10 +17,11 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Research Platform', href: '/research' },
+    { name: 'Data', href: '/data' },
     { name: 'Governance', href: '/governance' },
-    { name: 'IP Ownership', href: '/ip-ownership' },
-    { name: 'Data Sovereignty', href: '/data-sovereignty' },
+    { name: 'NFT', href: '/nft' },
+    { name: 'AI', href: '/ai' },
+    { name: 'Research Platform', href: '/research' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
