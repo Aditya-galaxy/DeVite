@@ -27,8 +27,8 @@ const Footer: React.FC = () => {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/research" className="hover:text-primary transition-smooth">Research Platform</Link></li>
               <li><Link to="/governance" className="hover:text-primary transition-smooth">Governance</Link></li>
-              <li><Link to="/ip-ownership" className="hover:text-primary transition-smooth">IP Ownership</Link></li>
-              <li><Link to="/data-sovereignty" className="hover:text-primary transition-smooth">Data Sovereignty</Link></li>
+              <li><Link to="/nft" className="hover:text-primary transition-smooth">IP Ownership through NFT</Link></li>
+              <li><Link to="/data" className="hover:text-primary transition-smooth">Data Sovereignty</Link></li>
             </ul>
           </div>
 

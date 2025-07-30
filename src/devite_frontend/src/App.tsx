@@ -4,10 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ResearchPlatform from "./pages/ResearchPlatform";
-import IPOwnership from "./pages/IPOwnership";
-import AIProcessing from "./pages/AIProcessing";
+import NFT from "./pages/NFT";
+import AI from "./pages/AI";
 import Governance from "./pages/Governance";
-import DataSovereignty from "./pages/DataSovereignty";
+import Data from "./pages/Data";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,10 +20,10 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/research" element={<ResearchPlatform />} />
-          <Route path="/ip-ownership" element={<IPOwnership />} />
-          <Route path="/ai-processing" element={<AIProcessing />} />
+          <Route path="/nft" element={<NFT />} />
+          <Route path="/ai" element={<AI />} />
           <Route path="/governance" element={<Governance />} />
-          <Route path="/data-sovereignty" element={<DataSovereignty />} />
+          <Route path="/data" element={<Data />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
