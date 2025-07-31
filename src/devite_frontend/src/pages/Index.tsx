@@ -20,32 +20,10 @@ import {
   TestTube,
   GitBranch
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Index = () => {
-  // Internet Identity Auth State
-  const [user, setUser] = useState<any>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Login with Internet Identity
-  const logIn = async () => {
-    setIsLoading(true);
-    const authClient = await AuthClient.create();
-    await authClient.login({
-      identityProvider: "https://identity.ic0.app",
-      onSuccess: async () => {
-        setUser(authClient.getIdentity());
-        setIsConnected(true);
-        setIsLoading(false);
-      },
-      onError: () => setIsLoading(false),
-    });
-  };
-
-  const logOut = () => {
-    setUser(null);
-    setIsConnected(false);
-  };
+  const { isConnected, isLoading } = useAuth();
 
   // Mock data for the research copilot
   const researchStats = {
@@ -79,22 +57,17 @@ const Index = () => {
   ];
 
   // Updated Get Started handler
-  const handleGetStarted = async () => {
-    if (!isConnected) {
-      await logIn();
-    }
-    if (isConnected || user) {
+  const handleGetStarted = () => {
+    if (isConnected) {
       window.location.href = '/dashboard';
+    } else {
+      window.location.href = '/login';
     }
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <Header
-        onConnect={logIn}
-        isConnected={isConnected}
-        address={user ? user.getPrincipal().toText() : undefined}
-      />
+      <Header />
 
       {/* Hero Section */}
       <section className="relative py-20 lg:py-32 overflow-hidden">

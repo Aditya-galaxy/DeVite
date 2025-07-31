@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Search, Filter, Vote, Users, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import Header from '../components/layout/Header';
 
 const Governance: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -98,227 +99,230 @@ const Governance: React.FC = () => {
     });
 
     return (
-        <div className="container py-8 space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold">Community Governance</h1>
-                    <p className="text-muted-foreground">
-                        Participate in decentralized decision-making for the research platform
-                    </p>
-                </div>
-                <Button className="gradient-primary">
-                    Create Proposal
-                </Button>
-            </div>
-
-            {/* Governance Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Card className="shadow-card">
-                    <CardContent className="p-6 text-center">
-                        <div className="h-12 w-12 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <Vote className="h-6 w-6 text-white" />
-                        </div>
-                        <p className="text-2xl font-bold">847</p>
-                        <p className="text-sm text-muted-foreground">Total Proposals</p>
-                    </CardContent>
-                </Card>
-                <Card className="shadow-card">
-                    <CardContent className="p-6 text-center">
-                        <div className="h-12 w-12 gradient-secondary rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <Users className="h-6 w-6 text-white" />
-                        </div>
-                        <p className="text-2xl font-bold">12.4K</p>
-                        <p className="text-sm text-muted-foreground">Active Voters</p>
-                    </CardContent>
-                </Card>
-                <Card className="shadow-card">
-                    <CardContent className="p-6 text-center">
-                        <div className="h-12 w-12 gradient-accent rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <CheckCircle className="h-6 w-6 text-white" />
-                        </div>
-                        <p className="text-2xl font-bold">623</p>
-                        <p className="text-sm text-muted-foreground">Passed Proposals</p>
-                    </CardContent>
-                </Card>
-                <Card className="shadow-card">
-                    <CardContent className="p-6 text-center">
-                        <div className="h-12 w-12 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-3">
-                            <Vote className="h-6 w-6 text-white" />
-                        </div>
-                        <p className="text-2xl font-bold">78.2%</p>
-                        <p className="text-sm text-muted-foreground">Voter Participation</p>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Filters */}
-            <Card className="shadow-card">
-                <CardHeader>
-                    <CardTitle className="flex items-center">
-                        <Filter className="h-5 w-5 mr-2" />
-                        Filter Proposals
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search proposals..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10"
-                            />
-                        </div>
-                        <Select value={selectedType} onValueChange={setSelectedType}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Types</SelectItem>
-                                <SelectItem value="protocol">Protocol</SelectItem>
-                                <SelectItem value="economic">Economic</SelectItem>
-                                <SelectItem value="governance">Governance</SelectItem>
-                                <SelectItem value="technical">Technical</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Status</SelectItem>
-                                <SelectItem value="active">Active</SelectItem>
-                                <SelectItem value="passed">Passed</SelectItem>
-                                <SelectItem value="failed">Failed</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <Button variant="outline" className="w-full">
-                            Reset Filters
-                        </Button>
+        <div className="min-h-screen bg-background">
+            <Header />
+            <div className="container py-8 space-y-8">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold">Community Governance</h1>
+                        <p className="text-muted-foreground">
+                            Participate in decentralized decision-making for the research platform
+                        </p>
                     </div>
-                </CardContent>
-            </Card>
+                    <Button className="gradient-primary">
+                        Create Proposal
+                    </Button>
+                </div>
 
-            {/* Proposals Grid */}
-            <div className="space-y-6">
-                {filteredProposals.map((proposal) => (
-                    <Card key={proposal.id} className="hover-lift shadow-card">
-                        <CardHeader>
-                            <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <Badge variant="outline">{proposal.type}</Badge>
-                                        <Badge variant={getStatusBadgeVariant(proposal.status) as any}>
-                                            <div className="flex items-center gap-1">
-                                                {getStatusIcon(proposal.status)}
-                                                {proposal.status}
-                                            </div>
-                                        </Badge>
-                                    </div>
-                                    <CardTitle className="text-xl leading-tight">{proposal.title}</CardTitle>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        Proposed by {proposal.proposer}
-                                    </p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-muted-foreground">Time Left</p>
-                                    <p className="font-medium">{proposal.timeLeft}</p>
-                                </div>
+                {/* Governance Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <Card className="shadow-card">
+                        <CardContent className="p-6 text-center">
+                            <div className="h-12 w-12 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <Vote className="h-6 w-6 text-white" />
                             </div>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p className="text-muted-foreground">{proposal.description}</p>
-
-                            <div className="flex flex-wrap gap-1">
-                                {proposal.tags.map((tag, index) => (
-                                    <Badge key={index} variant="secondary" className="text-xs">
-                                        {tag}
-                                    </Badge>
-                                ))}
-                            </div>
-
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-sm font-medium">Voting Progress</span>
-                                    <span className="text-sm text-muted-foreground">
-                                        {((proposal.votesFor + proposal.votesAgainst) / proposal.quorum * 100).toFixed(1)}% quorum
-                                    </span>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="flex items-center gap-1">
-                                            <CheckCircle className="h-3 w-3 text-green-500" />
-                                            For: {proposal.votesFor.toLocaleString()}
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <XCircle className="h-3 w-3 text-red-500" />
-                                            Against: {proposal.votesAgainst.toLocaleString()}
-                                        </span>
-                                    </div>
-
-                                    <div className="w-full bg-muted rounded-full h-3">
-                                        <div className="flex h-3 rounded-full overflow-hidden">
-                                            <div
-                                                className="bg-green-500 transition-all"
-                                                style={{
-                                                    width: `${(proposal.votesFor / (proposal.votesFor + proposal.votesAgainst)) * 100}%`
-                                                }}
-                                            ></div>
-                                            <div
-                                                className="bg-red-500 transition-all"
-                                                style={{
-                                                    width: `${(proposal.votesAgainst / (proposal.votesFor + proposal.votesAgainst)) * 100}%`
-                                                }}
-                                            ></div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-between text-xs text-muted-foreground">
-                                        <span>Approval: {proposal.threshold}%</span>
-                                        <span>Quorum: {proposal.quorum.toLocaleString()}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="pt-2 border-t">
-                                {proposal.status === 'Active' ? (
-                                    <div className="flex gap-2">
-                                        <Button className="flex-1" variant="hero">
-                                            Vote For
-                                        </Button>
-                                        <Button variant="outline" className="flex-1">
-                                            Vote Against
-                                        </Button>
-                                        <Button variant="outline" size="icon">
-                                            <Vote className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    <Button variant="outline" className="w-full">
-                                        View Results
-                                    </Button>
-                                )}
-                            </div>
+                            <p className="text-2xl font-bold">847</p>
+                            <p className="text-sm text-muted-foreground">Total Proposals</p>
                         </CardContent>
                     </Card>
-                ))}
-            </div>
+                    <Card className="shadow-card">
+                        <CardContent className="p-6 text-center">
+                            <div className="h-12 w-12 gradient-secondary rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <Users className="h-6 w-6 text-white" />
+                            </div>
+                            <p className="text-2xl font-bold">12.4K</p>
+                            <p className="text-sm text-muted-foreground">Active Voters</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="shadow-card">
+                        <CardContent className="p-6 text-center">
+                            <div className="h-12 w-12 gradient-accent rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <CheckCircle className="h-6 w-6 text-white" />
+                            </div>
+                            <p className="text-2xl font-bold">623</p>
+                            <p className="text-sm text-muted-foreground">Passed Proposals</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="shadow-card">
+                        <CardContent className="p-6 text-center">
+                            <div className="h-12 w-12 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <Vote className="h-6 w-6 text-white" />
+                            </div>
+                            <p className="text-2xl font-bold">78.2%</p>
+                            <p className="text-sm text-muted-foreground">Voter Participation</p>
+                        </CardContent>
+                    </Card>
+                </div>
 
-            {filteredProposals.length === 0 && (
+                {/* Filters */}
                 <Card className="shadow-card">
-                    <CardContent className="text-center py-12">
-                        <div className="h-16 w-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Search className="h-8 w-8 text-white" />
+                    <CardHeader>
+                        <CardTitle className="flex items-center">
+                            <Filter className="h-5 w-5 mr-2" />
+                            Filter Proposals
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div className="relative">
+                                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search proposals..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="pl-10"
+                                />
+                            </div>
+                            <Select value={selectedType} onValueChange={setSelectedType}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Types</SelectItem>
+                                    <SelectItem value="protocol">Protocol</SelectItem>
+                                    <SelectItem value="economic">Economic</SelectItem>
+                                    <SelectItem value="governance">Governance</SelectItem>
+                                    <SelectItem value="technical">Technical</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Status</SelectItem>
+                                    <SelectItem value="active">Active</SelectItem>
+                                    <SelectItem value="passed">Passed</SelectItem>
+                                    <SelectItem value="failed">Failed</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Button variant="outline" className="w-full">
+                                Reset Filters
+                            </Button>
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">No proposals found</h3>
-                        <p className="text-muted-foreground">
-                            Try adjusting your search criteria or create a new proposal.
-                        </p>
                     </CardContent>
                 </Card>
-            )}
+
+                {/* Proposals Grid */}
+                <div className="space-y-6">
+                    {filteredProposals.map((proposal) => (
+                        <Card key={proposal.id} className="hover-lift shadow-card">
+                            <CardHeader>
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <Badge variant="outline">{proposal.type}</Badge>
+                                            <Badge variant={getStatusBadgeVariant(proposal.status) as any}>
+                                                <div className="flex items-center gap-1">
+                                                    {getStatusIcon(proposal.status)}
+                                                    {proposal.status}
+                                                </div>
+                                            </Badge>
+                                        </div>
+                                        <CardTitle className="text-xl leading-tight">{proposal.title}</CardTitle>
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                            Proposed by {proposal.proposer}
+                                        </p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm text-muted-foreground">Time Left</p>
+                                        <p className="font-medium">{proposal.timeLeft}</p>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <p className="text-muted-foreground">{proposal.description}</p>
+
+                                <div className="flex flex-wrap gap-1">
+                                    {proposal.tags.map((tag, index) => (
+                                        <Badge key={index} variant="secondary" className="text-xs">
+                                            {tag}
+                                        </Badge>
+                                    ))}
+                                </div>
+
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm font-medium">Voting Progress</span>
+                                        <span className="text-sm text-muted-foreground">
+                                            {((proposal.votesFor + proposal.votesAgainst) / proposal.quorum * 100).toFixed(1)}% quorum
+                                        </span>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="flex items-center gap-1">
+                                                <CheckCircle className="h-3 w-3 text-green-500" />
+                                                For: {proposal.votesFor.toLocaleString()}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <XCircle className="h-3 w-3 text-red-500" />
+                                                Against: {proposal.votesAgainst.toLocaleString()}
+                                            </span>
+                                        </div>
+
+                                        <div className="w-full bg-muted rounded-full h-3">
+                                            <div className="flex h-3 rounded-full overflow-hidden">
+                                                <div
+                                                    className="bg-green-500 transition-all"
+                                                    style={{
+                                                        width: `${(proposal.votesFor / (proposal.votesFor + proposal.votesAgainst)) * 100}%`
+                                                    }}
+                                                ></div>
+                                                <div
+                                                    className="bg-red-500 transition-all"
+                                                    style={{
+                                                        width: `${(proposal.votesAgainst / (proposal.votesFor + proposal.votesAgainst)) * 100}%`
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex justify-between text-xs text-muted-foreground">
+                                            <span>Approval: {proposal.threshold}%</span>
+                                            <span>Quorum: {proposal.quorum.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="pt-2 border-t">
+                                    {proposal.status === 'Active' ? (
+                                        <div className="flex gap-2">
+                                            <Button className="flex-1" variant="hero">
+                                                Vote For
+                                            </Button>
+                                            <Button variant="outline" className="flex-1">
+                                                Vote Against
+                                            </Button>
+                                            <Button variant="outline" size="icon">
+                                                <Vote className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <Button variant="outline" className="w-full">
+                                            View Results
+                                        </Button>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {filteredProposals.length === 0 && (
+                    <Card className="shadow-card">
+                        <CardContent className="text-center py-12">
+                            <div className="h-16 w-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Search className="h-8 w-8 text-white" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">No proposals found</h3>
+                            <p className="text-muted-foreground">
+                                Try adjusting your search criteria or create a new proposal.
+                            </p>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
         </div>
     );
 };

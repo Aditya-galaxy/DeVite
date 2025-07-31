@@ -4,14 +4,10 @@ import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { Badge } from '../ui/badge';
 import { Menu, Bell, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-interface HeaderProps {
-  onConnect: () => void;      // Should handle both login and logout
-  isConnected: boolean;
-  address?: string;
-}
-
-const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
+const Header: React.FC = () => {
+  const { isConnected, user, logOut } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -63,15 +59,23 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm">
                 <User className="h-4 w-4 mr-2" />
-                {address ? address.slice(0, 8) + '...' : 'Profile'}
+                {user?.principal
+                  ? user.principal.slice(0, 8) + '...'
+                  : user?.google
+                    ? 'Google User'
+                    : 'Profile'}
               </Button>
-              <Button variant="ghost" size="icon" onClick={onConnect}>
+              <Button variant="ghost" size="icon" onClick={logOut}>
                 <User className="h-4 w-4" />
                 {/* This acts as "Sign Out" */}
               </Button>
             </div>
           ) : (
-            <Button onClick={onConnect} variant="hero" size="sm">
+            <Button
+              onClick={() => window.location.href = '/login'}
+              variant="hero"
+              size="sm"
+            >
               <User className="h-4 w-4 mr-2" />
               Sign in
             </Button>
@@ -112,15 +116,19 @@ const Header: React.FC<HeaderProps> = ({ onConnect, isConnected, address }) => {
                   <div className="space-y-2">
                     <Button variant="outline" className="w-full justify-start">
                       <User className="h-4 w-4 mr-2" />
-                      {address ? address.slice(0, 8) + '...' : 'Profile'}
+                      {user?.principal
+                        ? user.principal.slice(0, 8) + '...'
+                        : user?.google
+                          ? 'Google User'
+                          : 'Profile'}
                     </Button>
-                    <Button variant="ghost" className="w-full justify-start" onClick={onConnect}>
+                    <Button variant="ghost" className="w-full justify-start" onClick={logOut}>
                       <User className="h-4 w-4 mr-2" />
                       Sign Out
                     </Button>
                   </div>
                 ) : (
-                  <Button onClick={onConnect} variant="hero" className="w-full">
+                  <Button onClick={() => window.location.href = '/login'} variant="hero" className="w-full">
                     <User className="h-4 w-4 mr-2" />
                     Sign in
                   </Button>
