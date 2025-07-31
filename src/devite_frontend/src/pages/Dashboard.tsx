@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { AuthClient } from '@dfinity/auth-client';
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -25,30 +26,14 @@ import {
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  // Internet Identity Auth State
-  const [user, setUser] = useState<any>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isConnected, isLoading } = useAuth();
+  const navigate = useNavigate();
 
-  // Login with Internet Identity
-  const logIn = async () => {
-    setIsLoading(true);
-    const authClient = await AuthClient.create();
-    await authClient.login({
-      identityProvider: "https://identity.ic0.app",
-      onSuccess: async () => {
-        setUser(authClient.getIdentity());
-        setIsConnected(true);
-        setIsLoading(false);
-      },
-      onError: () => setIsLoading(false),
-    });
-  };
-
-  const logOut = () => {
-    setUser(null);
-    setIsConnected(false);
-  };
+  React.useEffect(() => {
+    if (!isConnected && !isLoading) {
+      navigate('/login');
+    }
+  }, [isConnected, isLoading, navigate]);
 
   // Research Copilot Mock Data
   const researcherStats = {
@@ -74,38 +59,15 @@ const Dashboard: React.FC = () => {
     alerts: ['High compute usage', 'Model update available']
   };
 
-  // Check if user is authenticated
+  // No need for login button or access restricted message
   if (!isConnected) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header
-          onConnect={logIn}
-          isConnected={isConnected}
-          address={user ? user.getPrincipal().toText() : undefined}
-        />
-        <div className="container py-20">
-          <div className="text-center space-y-6">
-            <h1 className="text-4xl font-bold">Access Restricted</h1>
-            <p className="text-xl text-muted-foreground">
-              Please sign in to access the research dashboard
-            </p>
-            <Button onClick={logIn} variant="hero" size="lg" disabled={isLoading}>
-              Sign in with Internet Identity
-            </Button>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
+    // Optionally, you can return null or a loading spinner while redirecting
+    return null;
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <Header
-        onConnect={logOut}
-        isConnected={isConnected}
-        address={user ? user.getPrincipal().toText() : undefined}
-      />
+      <Header />
       <div className="container py-8 space-y-8">
         <div className="flex items-center justify-between">
           <div>
