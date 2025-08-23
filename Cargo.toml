@@ -1,6 +1,7 @@
 [workspace]
 members = [
-    "src/devite_backend"
+    "src/devite_backend",
+    "src/ai_agent_backend"
 ]
 resolver = "2"
 

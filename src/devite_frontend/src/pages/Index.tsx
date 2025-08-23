@@ -107,7 +107,7 @@ const Index = () => {
                   variant="outline"
                   size="xl"
                   className="border-2 hover:shadow-card shadow-glow"
-                  onClick={() => window.location.href = isConnected ? '/dashboard' : '#'}
+                  onClick={() => window.location.href = isConnected ? '/deploy-agent' : '/login'}
                   disabled={!isConnected}
                 >
                   Deploy Agent

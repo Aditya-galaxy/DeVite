@@ -1,0 +1,18 @@
+// Model type copied from ic_llm.did
+type Model = variant {
+  Llama3_1_8B;
+  Qwen3_32B;
+  Llama4Scout;
+};
+
+type AgentDeployment = record {
+  owner: principal;
+  model: Model;
+  deployed_at: nat64;
+};
+
+service : {
+  deploy_agent: (Model) -> (variant { Ok: AgentDeployment; Err: text });
+  prompt_model: (Model, text) -> (variant { Ok: text; Err: text });
+  get_my_agents: () -> (vec AgentDeployment) query;
+}

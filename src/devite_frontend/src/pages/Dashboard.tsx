@@ -81,7 +81,11 @@ const Dashboard: React.FC = () => {
               <Plus className="h-4 w-4 mr-2" />
               New Research Project
             </Button>
-            <Button variant="outline" size="lg">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => navigate('/deploy-agent')}
+            >
               <Bot className="h-4 w-4 mr-2" />
               Deploy Agent
             </Button>

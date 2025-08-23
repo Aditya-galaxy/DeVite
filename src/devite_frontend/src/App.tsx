@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
+import DeployAgent from "./pages/DeployAgent";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/ai" element={<AI />} />
               <Route path="/governance" element={<Governance />} />
               <Route path="/data" element={<Data />} />
+              <Route path="/deploy-agent" element={<DeployAgent />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

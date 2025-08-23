@@ -3,7 +3,8 @@
     "devite_backend": {
       "candid": "src/devite_backend/devite_backend.did",
       "package": "devite_backend",
-      "type": "rust"
+      "type": "rust",
+      "wasm": "target/wasm32-unknown-unknown/release/devite_backend.wasm"
     },
     "devite_frontend": {
       "dependencies": ["devite_backend"],
@@ -12,6 +13,23 @@
       },
       "source": ["src/devite_frontend/assets", "dist/devite_frontend/"],
       "type": "assets"
+    },
+    "llm": {
+      "candid": "https://github.com/dfinity/llm/releases/latest/download/llm-canister-ollama.did",
+      "type": "custom",
+      "wasm": "target/wasm32-unknown-unknown/release/devite_backend.wasm",
+      "specified_id": "w36hm-eqaaa-aaaal-qr76a-cai",
+      "remote": {
+        "id": {
+          "ic": "w36hm-eqaaa-aaaal-qr76a-cai"
+        }
+      }
+    },
+    "ai_agent_backend": {
+      "type": "rust",
+      "package": "ai_agent_backend",
+      "candid": "src/ai_agent_backend/ai_agent_backend.did",
+      "wasm": "target/wasm32-unknown-unknown/release/ai_agent_backend.wasm"
     }
   },
   "defaults": {
