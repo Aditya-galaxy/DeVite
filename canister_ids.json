@@ -4,8 +4,11 @@
   },
   "devite_frontend": {
     "ic": "u6s2n-gx777-77774-qaaba-cai"
+<<<<<<< HEAD
   },
   "ai_agent_backend": {
     "ic": "ucwa4-rx777-77774-qaada-cai"
+=======
+>>>>>>> 2ebd9e641d03bdf5a798648a39f8254b8becdd80
   }
 }
